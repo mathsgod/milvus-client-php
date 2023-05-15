@@ -10,10 +10,36 @@ $client = new Client();
 
 $collection = new Collection($client, "book");
 
+print_r($collection->query("book_id in [100]"));
+die();
 
-print_R($collection->query("1==1", ["book_id"]));
+$i = $collection->insert([
+    [
+        "book_id" => 101,
+        "book_intro" => [1, 2, 3]
+    ]
+]);
 
-//print_R($collection->search([[0.1, 0.2]], "book_intro", 2, "L2", 10));
+print_r($i);
+
+
+
+
+
+//die();
+//print_r($collection->deleteEntities("book_id < 10000"));
+
+die();
+
+
+//print_R($collection->getFields());
+//die();
+
+print_R($collection->query("book_id < 100", ["book_intro"]));
+
+die();
+
+print_R($collection->search([[0.1, 0.2]], "book_intro", 10, "L2", 10));
 
 
 

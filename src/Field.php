@@ -9,6 +9,7 @@ class Field
     public $description;
     public $data_type;
     public $is_primary_key;
+    public $type_params;
 
 
     public function __construct(Client $client, string $name)

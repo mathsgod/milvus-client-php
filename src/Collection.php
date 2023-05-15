@@ -12,6 +12,14 @@ class Collection
         $this->name = $name;
     }
 
+    public function deleteEntities(string $expr)
+    {
+        return $this->client->deleteEntities([
+            "collection_name" => $this->name,
+            "expr" => $expr
+        ]);
+    }
+
     public function dropIndex()
     {
         $this->client->dropIndex([
@@ -25,6 +33,24 @@ class Collection
             "collection_name" => $this->name,
             "fields_data" => $data
         ]);
+    }
+
+    public function hasPartition(string $name)
+    {
+        $data = $this->client->hasPartition([
+            "collection_name" => $this->name,
+            "partition_name" => $name
+        ]);
+
+        return isset($data["value"]) && $data["value"] == 1;
+    }
+
+    public function showPartitions()
+    {
+        $data = $this->client->showPartitions([
+            "collection_name" => $this->name
+        ]);
+        return $data;
     }
 
     public function getPartitions()
@@ -43,6 +69,12 @@ class Collection
     }
 
 
+    public function release()
+    {
+        $this->client->releaseCollection([
+            "collection_name" => $this->name
+        ]);
+    }
 
     public function load()
     {
@@ -51,13 +83,60 @@ class Collection
         ]);
     }
 
+    public function getPrimaryKeyField()
+    {
+        foreach ($this->getFields() as $field) {
+            if ($field->is_primary_key) {
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
     public function query(string $expr, array $output_fields = [])
     {
-        return $this->client->query([
+        $data = $this->client->query([
             "collection_name" => $this->name,
             "expr" => $expr,
-            "output_fields" => $output_fields
+            "output_fields" => $output_fields,
         ]);
+
+        if (isset($data["status"]["error_code"])) {
+            throw new \Exception($data["status"]["reason"], $data["status"]["error_code"]);
+        }
+
+
+        if (isset($data["fields_data"])) {
+            $result = [];
+
+            foreach ($data["fields_data"] as $d) {
+                $field_name = $d["field_name"];
+                if (isset($d["Field"]["Vectors"])) {
+                    $dim = $d["Field"]["Vectors"]["dim"];
+                    foreach (array_chunk($d["Field"]["Vectors"]["Data"]["FloatVector"]["data"], $dim) as $i => $chunk) {
+                        if (!isset($result[$i])) {
+                            $result[$i] = [];
+                        }
+
+                        $result[$i][$field_name] = $chunk;
+                    }
+                } elseif (isset($d["Field"]["Scalars"])) {
+                    if (isset($d["Field"]["Scalars"]["Data"]["LongData"]["data"])) {
+                        foreach ($d["Field"]["Scalars"]["Data"]["LongData"]["data"] as $i => $value) {
+                            if (!isset($result[$i])) {
+                                $result[$i] = [];
+                            }
+
+                            $result[$i][$field_name] = $value;
+                        }
+                    }
+                }
+            }
+            return $result;
+        }
+
+        return $data;
     }
 
     public function search(array $vectors, string $anns_field, int $topk, string $metric_type, int $nprobe, int $round_decimal = -1)
