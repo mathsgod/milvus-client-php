@@ -1,1 +1,0 @@
-# milvus-client-php
