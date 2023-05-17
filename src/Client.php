@@ -12,6 +12,12 @@ class Client
         ]);
     }
 
+
+    public function getCollection(string $name)
+    {
+        return new Collection($this, $name);
+    }
+
     public function query(array $params)
     {
         $response = $this->client->post('/api/v1/query', [
@@ -170,6 +176,8 @@ class Client
         }
 
 
+   
+
         $response = $this->client->request('POST', '/api/v1/entities', [
             'json' => [
                 "collection_name" => $params["collection_name"],
@@ -183,37 +191,10 @@ class Client
 
     public function createCollection(array $params)
     {
-
-        $schema = [
-            "name" => $params["collection_name"],
-            "autoID" => false,
-            "description" => $params["description"],
-        ];
-
-        foreach ($params["fields"] as $fields) {
-            $s = [
-                "name" => $fields["name"],
-                "data_type" => $fields["data_type"],
-                "is_primary_key" => isset($fields["is_primary_key"]) && $fields["is_primary_key"] ? true : false,
-                "autoID" => false,
-
-            ];
-
-            if (isset($fields["dim"])) {
-                $s["type_params"][] = [
-                    "key" => "dim",
-                    "value" => (string)$fields["dim"]
-                ];
-            }
-
-            $schema["fields"][] = $s;
-        }
+        $params["schema"]["name"] = $params["collection_name"];
 
         $response = $this->client->post('/api/v1/collection', [
-            'json' => [
-                "collection_name" => $params['collection_name'],
-                "schema" => $schema
-            ]
+            'json' => $params
         ]);
 
         return json_decode($response->getBody()->getContents(), true);

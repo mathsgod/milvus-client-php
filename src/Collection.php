@@ -2,6 +2,8 @@
 
 namespace Milvus;
 
+use Exception;
+
 class Collection
 {
     private $client;
@@ -29,7 +31,7 @@ class Collection
 
     public function insert(array $data)
     {
-        $this->client->insert([
+        return $this->client->insert([
             "collection_name" => $this->name,
             "fields_data" => $data
         ]);
@@ -71,16 +73,27 @@ class Collection
 
     public function release()
     {
-        $this->client->releaseCollection([
+        return $this->client->releaseCollection([
+            "collection_name" => $this->name
+        ]);
+    }
+
+    public function drop()
+    {
+        return $this->client->dropCollection([
             "collection_name" => $this->name
         ]);
     }
 
     public function load()
     {
-        $this->client->loadCollection([
+        $ret = $this->client->loadCollection([
             "collection_name" => $this->name
         ]);
+
+        if (isset($ret["error_code"])) {
+            throw new Exception($ret["reason"], $ret["error_code"]);
+        }
     }
 
     public function getPrimaryKeyField()
@@ -165,16 +178,50 @@ class Collection
         $fields = [];
 
         foreach ($data["schema"]["fields"] as $field) {
-            $f = new Field($this->client, $field["name"]);
-            //build field
-            foreach ($field as $key => $value) {
-                $f->$key = $value;
-            }
-
-            $fields[] = $f;
+            $fields[] = Field::FromArray($field);
         }
 
         return $fields;
+    }
+
+    public function addField(Field $field)
+    {
+        $data = $this->client->describeCollection([
+            "collection_name" => $this->name
+        ]);
+        $schema = $data["schema"];
+
+        $schema["fields"][] = $field->toArray();
+
+        //drop collection
+        $this->drop();
+
+        //create collection
+        $this->client->createCollection([
+            "collection_name" => $this->name,
+            "schema" => $schema
+        ]);
+    }
+
+    public function deleteField(string $name)
+    {
+        $data = $this->client->describeCollection([
+            "collection_name" => $this->name
+        ]);
+        $schema = $data["schema"];
+
+        $schema["fields"] = array_filter($schema["fields"], function ($field) use ($name) {
+            return $field["name"] != $name;
+        });
+
+        //drop collection
+        $this->drop();
+
+        //create collection
+        $this->client->createCollection([
+            "collection_name" => $this->name,
+            "schema" => $schema
+        ]);
     }
 
     public function createIndex(string $field, string $metric_type, string $index_type, array $params)
