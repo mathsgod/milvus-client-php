@@ -14,6 +14,19 @@ class Collection
         $this->name = $name;
     }
 
+    
+
+    public function getAliases()
+    {
+        $desc = $this->client->describeCollection($this->name);
+        return $desc["aliases"];
+    }
+
+    public function dropAlias(string $name)
+    {
+        $this->client->dropAlias($name);
+    }
+
     public function deleteEntities(string $expr)
     {
         return $this->client->deleteEntities($this->name, $expr);

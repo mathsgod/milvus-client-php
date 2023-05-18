@@ -12,6 +12,38 @@ class Client
         ]);
     }
 
+    public function createAlias(string $name, string $alias)
+    {
+        $response = $this->client->post('/api/v1/alias', [
+            'json' => [
+                'collection_name' => $name,
+                'alias' => $alias
+            ]
+        ]);
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    public function dropAlias(string $alias)
+    {
+        $response = $this->client->delete('/api/v1/alias', [
+            'json' => [
+                'alias' => $alias
+            ]
+        ]);
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    public function alterAlias(string $name, string $alias)
+    {
+        $response = $this->client->patch('/api/v1/alias', [
+            'json' => [
+                'collection_name' => $name,
+                'alias' => $alias
+            ]
+        ]);
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
     public function health()
     {
         $response = $this->client->get('/api/v1/health');
@@ -155,10 +187,12 @@ class Client
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function describeCollection(array $params)
+    public function describeCollection(string $name)
     {
         $response = $this->client->get('/api/v1/collection', [
-            'json' => $params
+            'json' => [
+                'collection_name' => $name
+            ]
         ]);
         return json_decode($response->getBody()->getContents(), true);
     }
