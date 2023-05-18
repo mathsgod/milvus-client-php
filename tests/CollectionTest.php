@@ -97,4 +97,16 @@ final class CollectionTest extends TestCase
 
         $this->assertEquals(5, count($result));
     }
+
+    public function testDelete()
+    {
+        $client = new Milvus\Client();
+        $collection = $client->getCollection("test_collection");
+        $collection->deleteEntities("book_id in [1]");
+
+        //count after delete
+        $result = $collection->query("book_id<10");
+
+        $this->assertEquals(4, count($result));
+    }
 }

@@ -62,5 +62,11 @@ $collection->load();
 ### Search Vectors
 ```php
 $collection = $client->getCollection("book");
-$result = $client->getCollection("test_collection")->search([1.0, 0.1], "book_intro", 10);
+$result = $client->getCollection("test_collection")->search([1.0, 0.1], "book_intro", 10); //topk=10
+```
+
+### Delete Entities
+```php
+$collection = $client->getCollection("book");
+$collection->deleteEntities("book_id in [1]");
 ```

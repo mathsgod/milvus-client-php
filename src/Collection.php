@@ -16,10 +16,7 @@ class Collection
 
     public function deleteEntities(string $expr)
     {
-        return $this->client->deleteEntities([
-            "collection_name" => $this->name,
-            "expr" => $expr
-        ]);
+        return $this->client->deleteEntities($this->name, $expr);
     }
 
     public function dropIndex()

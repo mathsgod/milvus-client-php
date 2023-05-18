@@ -163,10 +163,13 @@ class Client
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function deleteEntities(array $params)
+    public function deleteEntities(string $collection_name, string $expr)
     {
         $response = $this->client->delete('/api/v1/entities', [
-            'json' => $params
+            'json' => [
+                'collection_name' => $collection_name,
+                'expr' => $expr
+            ]
         ]);
         return json_decode($response->getBody()->getContents(), true);
     }
