@@ -12,17 +12,27 @@ class Field
     public $type_params;
 
 
-    public function __construct(string $name)
+    public function __construct(string $name, int $data_type, bool $is_primary_key = false, ?int $dim = null)
     {
         $this->name = $name;
+        $this->data_type = $data_type;
+        $this->is_primary_key = $is_primary_key;
+
+        if ($dim) {
+            $this->type_params = [
+                [
+                    "key" => "dim",
+                    "value" => (string)$dim
+                ]
+            ];
+        }
     }
 
     public static function FromArray(array $array)
     {
-        $field = new Field($array["name"]);
+        $field = new Field($array["name"], $array["data_type"]);
         $field->description = $array["description"] ?? null;
-        $field->data_type = $array["data_type"];
-        $field->is_primary_key = $array["is_primary_key"];
+        $field->is_primary_key = $array["is_primary_key"] ?? false;
         $field->type_params = $array["type_params"] ?? null;
 
         return $field;

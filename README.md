@@ -13,20 +13,17 @@ composer require mathsgod/milvus-client-php
 ```php
 $client=new Milvus\Client($host, $port);
 
-
-
 $schema = new Schema();
 $schema->description = "book";
 
-
-$schema->addField(Field::FromArray([
+$schema->addField([
     "name" => "book_id",
     "data_type" => DataType::Int64,
     "is_primary_key" => true,
     "description" => "book id",
-]));
+]);
 
-$schema->addField(Field::FromArray([
+$schema->addField([
     "name" => "value",
     "description" => "embedding vector",
     "data_type" => DataType::FloatVector,
@@ -37,7 +34,11 @@ $schema->addField(Field::FromArray([
             "value" => "1536"
         ]
     ],
-]));
+]);
 
+$client->createCollection([
+    "collection_name" => "book",
+    "schema" => $schema
+]);
 
 ```

@@ -21,8 +21,21 @@ class Schema
         return $schema;
     }
 
-    public function addField(Field $field)
+    public function addField(Field|array $field)
     {
         $this->fields[] = $field;
+    }
+
+    public function toArray()
+    {
+        $array = [
+            "name" => $this->name,
+            "description" => $this->description,
+            "fields" => [],
+        ];
+        foreach ($this->fields as $field) {
+            $array["fields"][] = is_array($field) ? $field : $field->toArray();
+        }
+        return $array;
     }
 }

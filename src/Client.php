@@ -12,6 +12,12 @@ class Client
         ]);
     }
 
+    public function health()
+    {
+        $response = $this->client->get('/api/v1/health');
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
     public function listRoles()
     {
         $response = $this->client->get('/api/v1/users');
@@ -96,10 +102,12 @@ class Client
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function loadCollection(array $params)
+    public function loadCollection(string $name)
     {
         $response = $this->client->post('/api/v1/collection/load', [
-            'json' => $params
+            'json' => [
+                'collection_name' => $name
+            ]
         ]);
         return json_decode($response->getBody()->getContents(), true);
     }
@@ -137,10 +145,12 @@ class Client
     }
 
 
-    public function dropCollection(array $params)
+    public function dropCollection(string $name)
     {
         $response = $this->client->delete("/api/v1/collection", [
-            'json' => $params
+            'json' => [
+                'collection_name' => $name
+            ]
         ]);
         return json_decode($response->getBody()->getContents(), true);
     }
@@ -202,12 +212,19 @@ class Client
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function createCollection(array $params)
+    public function createCollection(string $name, Schema|array $schema)
     {
-        $params["schema"]["name"] = $params["collection_name"];
+        if (is_array($schema)) {
+            $schema["name"] = $name;
+        } else {
+            $schema->name = $name;
+        }
 
         $response = $this->client->post('/api/v1/collection', [
-            'json' => $params
+            'json' => [
+                "collection_name" => $name,
+                "schema" => $schema
+            ]
         ]);
 
         return json_decode($response->getBody()->getContents(), true);
@@ -216,12 +233,6 @@ class Client
     public function showCollections()
     {
         $response = $this->client->get('/api/v1/collections');
-        $body = $response->getBody();
-
-        $result = '';
-        while (!$body->eof()) {
-            $result .= $body->read(1024);
-        }
-        return json_decode($result, true);
+        return json_decode($response->getBody()->getContents(), true);
     }
 }

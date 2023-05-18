@@ -80,20 +80,17 @@ class Collection
 
     public function drop()
     {
-        return $this->client->dropCollection([
-            "collection_name" => $this->name
-        ]);
+        return $this->client->dropCollection($this->name);
     }
 
     public function load()
     {
-        $ret = $this->client->loadCollection([
-            "collection_name" => $this->name
-        ]);
+        $ret = $this->client->loadCollection($this->name);
 
         if (isset($ret["error_code"])) {
             throw new Exception($ret["reason"], $ret["error_code"]);
         }
+        return $ret;
     }
 
     public function getPrimaryKeyField()
@@ -231,10 +228,7 @@ class Collection
         $this->drop();
 
         //create collection
-        $this->client->createCollection([
-            "collection_name" => $this->name,
-            "schema" => $schema
-        ]);
+        $this->client->createCollection($this->name, $schema);
     }
 
     public function deleteField(string $name)
@@ -252,13 +246,10 @@ class Collection
         $this->drop();
 
         //create collection
-        $this->client->createCollection([
-            "collection_name" => $this->name,
-            "schema" => $schema
-        ]);
+        $this->client->createCollection($this->name, $schema);
     }
 
-    public function createIndex(string $field, string $metric_type, string $index_type, array $params)
+    public function createIndex(string $field, string $index_type, string $metric_type, array $params)
     {
         return $this->client->createIndex([
             "collection_name" => $this->name,
