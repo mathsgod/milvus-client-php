@@ -65,8 +65,16 @@ $collection = $client->getCollection("book");
 $result = $client->getCollection("test_collection")->search([1.0, 0.1], "book_intro", 10); //topk=10
 ```
 
+### Query Entities
+```php
+$collection = $client->getCollection("book");
+$result = $collection->query("book_id in [1,2,3,4,5]");
+```
+
 ### Delete Entities
 ```php
 $collection = $client->getCollection("book");
 $collection->deleteEntities("book_id in [1]");
 ```
+
+
