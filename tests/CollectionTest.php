@@ -48,23 +48,23 @@ final class CollectionTest extends TestCase
         $fields_data = [
             [
                 "book_id" => 1,
-                "book_intro" => [1.0, 2.0]
+                "book_intro" => [1.0, 0.1]
             ],
             [
                 "book_id" => 2,
-                "book_intro" => [1.0, 2.0]
+                "book_intro" => [1.0, 0.2]
             ],
             [
                 "book_id" => 3,
-                "book_intro" => [1.0, 2.0]
+                "book_intro" => [1.0, 0.3]
             ],
             [
                 "book_id" => 4,
-                "book_intro" => [1.0, 2.0]
+                "book_intro" => [1.0, 0.4]
             ],
             [
                 "book_id" => 5,
-                "book_intro" => [1.0, 2.0]
+                "book_intro" => [1.0, 0.5]
             ],
         ];
 
@@ -86,5 +86,15 @@ final class CollectionTest extends TestCase
         $field = $client->getCollection("test_collection")->getPrimaryKeyField();
 
         $this->assertEquals("book_id", $field->name);
+    }
+
+    public function testSearch()
+    {
+        $client = new Milvus\Client();
+        $client->getCollection("test_collection");
+
+        $result = $client->getCollection("test_collection")->search([1.0, 0.1], "book_intro", 10);
+
+        $this->assertEquals(5, count($result));
     }
 }

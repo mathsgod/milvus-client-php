@@ -14,31 +14,53 @@ composer require mathsgod/milvus-client-php
 $client=new Milvus\Client($host, $port);
 
 $schema = new Schema();
-$schema->description = "book";
+$schema->addField("book_id", DataType::Int64,true);
+$schema->addField(new Field("book_intro", DataType::FloatVector, false, 2));//dimension 2
+$client->createCollection("book",$schema);
+```
 
-$schema->addField([
-    "name" => "book_id",
-    "data_type" => DataType::Int64,
-    "is_primary_key" => true,
-    "description" => "book id",
-]);
 
-$schema->addField([
-    "name" => "value",
-    "description" => "embedding vector",
-    "data_type" => DataType::FloatVector,
-    "is_primary_key" => false,
-    "type_params" => [
-        [
-            "key" => "dim",
-            "value" => "1536"
-        ]
+### Create Index
+```php
+$collection = $client->getCollection("book");
+$collection->createIndex("book_intro", IndexType::IVF_FLAT, MetricType::L2, IVF_FLAT::Param(128));
+```
+
+### Insert Vectors
+```php
+$collection = $client->getCollection("book");
+$collection->insert([
+    [
+        "book_id" => 1,
+        "book_intro" => [1.0, 2.0]
+    ],
+    [
+        "book_id" => 2,
+        "book_intro" => [1.0, 2.0]
+    ],
+    [
+        "book_id" => 3,
+        "book_intro" => [1.0, 2.0]
+    ],
+    [
+        "book_id" => 4,
+        "book_intro" => [1.0, 2.0]
+    ],
+    [
+        "book_id" => 5,
+        "book_intro" => [1.0, 2.0]
     ],
 ]);
+```
 
-$client->createCollection([
-    "collection_name" => "book",
-    "schema" => $schema
-]);
+### Load Collection
+```php
+$collection = $client->getCollection("book");
+$collection->load();
+```
 
+### Search Vectors
+```php
+$collection = $client->getCollection("book");
+$result = $client->getCollection("test_collection")->search([1.0, 0.1], "book_intro", 10);
 ```
