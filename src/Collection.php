@@ -7,13 +7,67 @@ use Exception;
 class Collection
 {
     private $client;
-    private $name;
-    public function __construct(Client $client, string $name)
+    private $collectionName;
+
+    public function __construct(Client $client, $collectionName)
     {
         $this->client = $client;
-        $this->name = $name;
+        $this->collectionName = $collectionName;
     }
 
+    public function describe()
+    {
+        return $this->client->post("/v2/vectordb/collections/describe", [
+            "json" => [
+                "collectionName" => $this->collectionName
+            ],
+        ]);
+    }
+
+
+    public function release()
+    {
+        return $this->client->post('/v2/vectordb/collections/release', [
+            'json' => [
+                'collectionName' => $this->collectionName
+            ]
+        ]);
+    }
+
+    public function load()
+    {
+        return $this->client->post('/v2/vectordb/collections/load', [
+            'json' => [
+                'collectionName' => $this->collectionName
+            ]
+        ]);
+    }
+
+    public function getStats()
+    {
+        return $this->client->post('/v2/vectordb/collections/get_stats', [
+            'json' => [
+                'collectionName' => $this->collectionName
+            ]
+        ]);
+    }
+
+
+    public function __debugInfo()
+    {
+        return [
+            "collectionName" => $this->collectionName
+        ];
+    }
+
+    public function entities()
+    {
+        return new Entities($this->client, $this->collectionName);
+    }
+
+
+
+    /* 
     
 
     public function getAliases()
@@ -270,5 +324,5 @@ class Collection
                 ["key" => "params", "value" => json_encode($params)]
             ]
         ]);
-    }
+    } */
 }

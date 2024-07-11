@@ -5,11 +5,46 @@ namespace Milvus;
 class Client
 {
     private $client;
-    public function __construct(string $server = "localhost", int $port = 9091)
+    public function __construct(string $server = "localhost", int $port = 19530)
     {
         $this->client = new \GuzzleHttp\Client([
-            'base_uri' => "http://$server:$port"
+            'base_uri' => "http://$server:$port",
+            "verify" => false,
+            "headers" => [
+                "Content-Type" => "application/json",
+            ]
         ]);
+    }
+
+    public function entities(string $collectionName)
+    {
+        return new Entities($this, $collectionName);
+    }
+
+    public function collection(string $name)
+    {
+        return new Collection($this, $name);
+    }
+
+    public function collections()
+    {
+        return new Collections($this);
+    }
+
+    public function role()
+    {
+        return new Role($this);
+    }
+
+    public function user()
+    {
+        return new User($this);
+    }
+
+    public function post($uri, array $options = []): array
+    {
+        $response = $this->client->post($uri, $options);
+        return json_decode($response->getBody()->getContents(), true)["data"];
     }
 
     public function createAlias(string $name, string $alias)
