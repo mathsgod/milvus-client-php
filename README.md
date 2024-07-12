@@ -55,3 +55,20 @@ $e->delete("id in [1]");
 ```
 
 
+## Users
+
+### List Users
+```php
+$users = $client->users()->list();
+```
+
+### Create a User
+```php
+$client->users()->create("test_user");
+```
+
+### Delete a User
+```php
+$client->user("test_user")->drop();
+```
+
