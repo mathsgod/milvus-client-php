@@ -13,56 +13,33 @@ composer require mathsgod/milvus-client-php
 ```php
 $client=new Milvus\Client($host, $port);
 
-$schema = new Schema();
-$schema->addField("book_id", DataType::Int64,true);
-$schema->addField(new Field("book_intro", DataType::FloatVector, false, 2));//dimension 2
-$client->createCollection("book",$schema);
-```
+// Create a collection with 5 dimensions
+$client->collections()->create("test_collection",5);
 
-
-### Create Index
-```php
-$collection = $client->getCollection("book");
-$collection->createIndex("book_intro", IndexType::IVF_FLAT, MetricType::L2, IVF_FLAT::Param(128));
 ```
 
 ### Insert Vectors
 ```php
-$collection = $client->getCollection("book");
+$collection = $client->entities("test_collection");
 $collection->insert([
-    [
-        "book_id" => 1,
-        "book_intro" => [1.0, 2.0]
-    ],
-    [
-        "book_id" => 2,
-        "book_intro" => [1.0, 2.0]
-    ],
-    [
-        "book_id" => 3,
-        "book_intro" => [1.0, 2.0]
-    ],
-    [
-        "book_id" => 4,
-        "book_intro" => [1.0, 2.0]
-    ],
-    [
-        "book_id" => 5,
-        "book_intro" => [1.0, 2.0]
-    ],
+    [ "id"=>1, "vector" => [1.0, 2.0, 3.0, 4.0, 5.0] ],
+    [ "id"=>2, "vector" => [2.0, 2.0, 3.0, 4.0, 5.0] ],
+    [ "id"=>3, "vector" => [3.0, 2.0, 3.0, 4.0, 5.0] ],
+    [ "id"=>4, "vector" => [4.0, 2.0, 3.0, 4.0, 5.0] ],
+    [ "id"=>5, "vector" => [5.0, 2.0, 3.0, 4.0, 5.0] ],
 ]);
 ```
 
 ### Load Collection
 ```php
-$collection = $client->getCollection("book");
+$collection = $client->collection("test_collection");
 $collection->load();
 ```
 
 ### Search Vectors
 ```php
-$collection = $client->getCollection("book");
-$result = $client->getCollection("test_collection")->search([1.0, 0.1], "book_intro", 10); //topk=10
+// Search for the top 10 vectors that are most similar to the vector [1.0,3.0,3.0,4.0,5.0]
+$result = $client->entities("test_collection")->search("vector",[1.0,3.0,3.0,4.0,5.0],10);
 ```
 
 ### Query Entities

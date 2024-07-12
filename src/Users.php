@@ -2,7 +2,7 @@
 
 namespace Milvus;
 
-class Role
+class Users
 {
     private $client;
 
@@ -13,9 +13,8 @@ class Role
 
     public function list()
     {
-        $content = $this->client->post("/v2/vectordb/roles/list", [
+        return $this->client->post("/v2/vectordb/users/list", [
             "body" => "{}",
-        ])->getBody()->getContents();
-        return json_decode($content, true);
+        ]);
     }
 }

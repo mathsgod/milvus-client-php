@@ -15,6 +15,34 @@ class Collection
         $this->collectionName = $collectionName;
     }
 
+    public function rename(string $newCollectionName)
+    {
+        return $this->client->post("/v2/vectordb/collections/rename", [
+            "json" => [
+                "collectionName" => $this->collectionName,
+                "newCollectionName" => $newCollectionName
+            ],
+        ]);
+    }
+
+    public function getLoadState()
+    {
+        return $this->client->post("/v2/vectordb/collections/get_load_state", [
+            "json" => [
+                "collectionName" => $this->collectionName
+            ],
+        ]);
+    }
+
+    public function drop()
+    {
+        return $this->client->post("/v2/vectordb/collections/drop", [
+            "json" => [
+                "collectionName" => $this->collectionName
+            ],
+        ]);
+    }
+
     public function describe()
     {
         return $this->client->post("/v2/vectordb/collections/describe", [

@@ -14,17 +14,6 @@ class Collections
         $this->client = $client;
     }
 
-    public function drop(string $name)
-    {
-        return  $this->client->post("/v2/vectordb/collections/drop", [
-            "json" => [
-                "dbName" => $this->dbName,
-                "collectionName" => $name
-            ],
-        ]);
-    }
-
-
     public function list()
     {
         return $this->client->post("/v2/vectordb/collections/list", [
