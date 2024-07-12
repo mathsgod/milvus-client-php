@@ -72,3 +72,20 @@ $client->users()->create("test_user");
 $client->user("test_user")->drop();
 ```
 
+### Grant role
+```php
+$client->user("test_user")->grantRole("admin");
+```
+
+### Revoke role
+```php
+$client->user("test_user")->revokeRole("admin");
+```
+
+## Roles
+
+### List roles
+```php
+$roles = $client->roles()->list();
+```
+
