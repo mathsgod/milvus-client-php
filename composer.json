@@ -1,6 +1,7 @@
 {
     "name": "mathsgod/milvus-client-php",
     "license": "MIT",
+    "description": "A PHP client for Milvus",
     "authors": [
         {
             "name": "Raymond Chong",
