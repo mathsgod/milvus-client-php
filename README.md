@@ -1,5 +1,7 @@
 # milvus-client-php
 
+A PHP client for [Milvus](https://milvus.io/). This library only supports Milvus 2.x.
+
 ## Setup
 
 ```
