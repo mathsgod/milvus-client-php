@@ -36,6 +36,11 @@ class Client
         return new Collections($this);
     }
 
+    public function role(string $roleName)
+    {
+        return new Role($this, $roleName);
+    }
+
     public function roles()
     {
         return new Roles($this);
