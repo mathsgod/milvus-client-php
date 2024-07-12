@@ -42,4 +42,16 @@ class Role
             ]),
         ]);
     }
+
+    public function revokePrivilege(string $objectType, string $objectName, string $privilege)
+    {
+        return $this->client->post("/v2/vectordb/roles/revoke_privilege", [
+            "body" => json_encode([
+                "roleName" => $this->roleName,
+                "objectType" => $objectType,
+                "objectName" => $objectName,
+                "privilege" => $privilege,
+            ]),
+        ]);
+    }
 }
