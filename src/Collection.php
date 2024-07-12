@@ -15,6 +15,15 @@ class Collection
         $this->collectionName = $collectionName;
     }
 
+    public function has()
+    {
+        return $this->client->post("/v2/vectordb/collections/has", [
+            "json" => [
+                "collectionName" => $this->collectionName
+            ],
+        ]);
+    }
+
     public function rename(string $newCollectionName)
     {
         return $this->client->post("/v2/vectordb/collections/rename", [
