@@ -23,7 +23,7 @@ class Collections
         ]);
     }
 
-    public function create(string $collectionName, int $dimesion)
+    public function create(string $collectionName, int $dimesion, array $options = [])
     {
         return $this->client->post("/v2/vectordb/collections/create", [
             "json" => [
