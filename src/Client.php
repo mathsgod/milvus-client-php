@@ -46,6 +46,11 @@ class Client
         return new Users($this);
     }
 
+    public function user(string $userName)
+    {
+        return new User($this, $userName);
+    }
+
     public function post($uri, array $options = []): array
     {
         $response = $this->client->post($uri, $options);

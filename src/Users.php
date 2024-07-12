@@ -17,4 +17,14 @@ class Users
             "body" => "{}",
         ]);
     }
+
+    public function create(string $userName, string $password)
+    {
+        return $this->client->post("/v2/vectordb/users/create", [
+            "body" => json_encode([
+                "user_name" => $userName,
+                "password" => $password,
+            ]),
+        ]);
+    }
 }
