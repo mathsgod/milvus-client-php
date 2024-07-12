@@ -5,17 +5,19 @@ namespace Milvus;
 class Partitions
 {
     private $client;
+    private $collectionName;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, string $collectionName)
     {
         $this->client = $client;
+        $this->collectionName = $collectionName;
     }
 
-    public function list(string $collectionName)
+    public function list()
     {
         return $this->client->post("/v2/vectordb/partitions/list", [
             "body" => json_encode([
-                "collectionName" => $collectionName,
+                "collectionName" => $this->collectionName,
             ]),
         ]);
     }

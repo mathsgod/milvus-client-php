@@ -21,6 +21,11 @@ class Client
         return new Aliases($this);
     }
 
+    public function partitions(string $collectionName)
+    {
+        return new Partitions($this, $collectionName);
+    }
+
     public function entities(string $collectionName)
     {
         return new Entities($this, $collectionName);
