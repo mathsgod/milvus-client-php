@@ -44,14 +44,14 @@ $result = $client->entities("test_collection")->search("vector",[1.0,3.0,3.0,4.0
 
 ### Query Entities
 ```php
-$collection = $client->getCollection("book");
-$result = $collection->query("book_id in [1,2,3,4,5]");
+$e = $client->entities("test_collection");
+$result = $e->query("id in [1,2,3,4,5]");
 ```
 
 ### Delete Entities
 ```php
-$collection = $client->getCollection("book");
-$collection->deleteEntities("book_id in [1]");
+$e = $client->entities("test_collection");
+$e->delete("id in [1]");
 ```
 
 
