@@ -23,12 +23,24 @@ class Collections
         ]);
     }
 
-    public function create(string $collectionName, int $dimesion, array $options = [])
+    public function describe(string $collectionName)
+    {
+        return $this->client->post("/v2/vectordb/collections/describe", [
+            "json" => [
+                "collectionName" => $collectionName,
+                "dbName" => $this->dbName
+            ],
+        ]);
+    }
+
+    public function create(string $collectionName, Schema $schema, array $index_params = [])
     {
         return $this->client->post("/v2/vectordb/collections/create", [
             "json" => [
                 "collectionName" => $collectionName,
-                "dimension" => $dimesion,
+                "schema" => $schema->toArray(),
+                "params" => $index_params,
+                "dbName" => $this->dbName,
             ],
         ]);
     }

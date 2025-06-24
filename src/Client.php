@@ -16,6 +16,16 @@ class Client
         ]);
     }
 
+    public function createSchema()
+    {
+        return new Schema([]);
+    }
+
+    public function databases()
+    {
+        return new Databases($this);
+    }
+
     public function aliases()
     {
         return new Aliases($this);
