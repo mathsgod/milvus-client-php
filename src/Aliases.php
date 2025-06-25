@@ -15,8 +15,16 @@ class Aliases
     public function list()
     {
         return $this->client->post("/v2/vectordb/aliases/list", [
+            "json" => [],
+        ]);
+    }
+
+    public function create(string $collection_name, string $alias)
+    {
+        return $this->client->post("/v2/vectordb/aliases/create", [
             "json" => [
-                "dbName" => $this->dbName
+                "aliasName" => $alias,
+                "collectionName" => $collection_name,
             ],
         ]);
     }

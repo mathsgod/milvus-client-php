@@ -14,31 +14,40 @@ class Databases
         $this->client = $client;
     }
 
-    public function create(string $dbName, array $properties = [])
+    public function list()
+    {
+        return $this->client->post("/v2/vectordb/databases/list", [
+            "headers" => [
+                "Content-Type" => "application/json",
+            ]
+        ]);
+    }
+
+    public function create(string $db_name, array $properties = [])
     {
         return $this->client->post("/v2/vectordb/databases/create", [
             "json" => [
-                "dbName" => $dbName,
+                "dbName" => $db_name,
                 "properties" => $properties,
             ],
         ]);
     }
 
-    public function alter(string $dbName, array $properties = [])
+    public function alter(string $db_name, array $properties = [])
     {
         return $this->client->post("/v2/vectordb/databases/alter", [
             "json" => [
-                "dbName" => $dbName,
+                "dbName" => $db_name,
                 "properties" => $properties,
             ],
         ]);
     }
 
-    public function drop(string $dbName)
+    public function drop(string $db_name)
     {
         return $this->client->post("/v2/vectordb/databases/drop", [
             "json" => [
-                "dbName" => $dbName,
+                "dbName" => $db_name,
             ],
         ]);
     }

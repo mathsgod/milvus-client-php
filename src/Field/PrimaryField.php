@@ -2,7 +2,9 @@
 
 namespace Milvus\Field;
 
-class PrimaryField
+use Milvus\FieldInterface;
+
+class PrimaryField implements FieldInterface
 {
     private string $fieldName;
     private string $dataType;

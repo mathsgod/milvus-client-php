@@ -2,33 +2,34 @@
 
 namespace Milvus;
 
+use Exception;
+
 class Entities
 {
     private $client;
     private $collectionName;
 
-    public function __construct(Client $client, string $collectionName)
+    public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->collectionName = $collectionName;
     }
 
 
-    public function insert(array $data)
+    public function insert(string $collection_name, array $data)
     {
         return  $this->client->post('/v2/vectordb/entities/insert', [
             'json' => [
-                'collectionName' => $this->collectionName,
+                'collectionName' => $collection_name,
                 'data' => $data
             ]
         ]);
     }
 
-    public function search(string $annsField, array $data, ?int $limit)
+    public function search(string $collection_name, string $annsField, array $data, ?int $limit)
     {
         return  $this->client->post('/v2/vectordb/entities/search', [
             'json' => [
-                'collectionName' => $this->collectionName,
+                'collectionName' => $collection_name,
                 'data' => $data,
                 'annsField' => $annsField,
                 "limit" => $limit
@@ -36,7 +37,7 @@ class Entities
         ]);
     }
 
-    public function query(string $filter,)
+    public function query(string $filter)
     {
         return  $this->client->post('/v2/vectordb/entities/query', [
             'json' => [
@@ -56,21 +57,30 @@ class Entities
         ]);
     }
 
-    public function delete(string $filter)
+    public function delete(string $collection_name, ?string $filter = null, ?array $ids = null, ?string $partition_name = null)
     {
+        if ($filter === null && $ids === null) {
+            throw new Exception("Either filter or ids must be provided for deletion.");
+        }
+
+        if ($ids !== null) {
+            $filter = "id in [" . implode(',', $ids) . "]";
+        }
+
         return $this->client->post('/v2/vectordb/entities/delete', [
             'json' => [
-                'collectionName' => $this->collectionName,
-                'filter' => $filter
+                'collectionName' => $collection_name,
+                'filter' => $filter,
+                'partitionName' => $partition_name
             ]
         ]);
     }
 
-    public function upsert(array $data)
+    public function upsert(string $collection_name, array $data)
     {
         return  $this->client->post('/v2/vectordb/entities/upsert', [
             'json' => [
-                'collectionName' => $this->collectionName,
+                'collectionName' => $collection_name,
                 'data' => $data
             ]
         ]);

@@ -2,18 +2,20 @@
 
 namespace Milvus\Field;
 
-class VectorField
+use Milvus\FieldInterface;
+
+class VectorField implements FieldInterface
 {
     private string $fieldName;
     private string $dataType;
-    private int $dimension;
+    private int $dim;
     private ?string $description;
 
-    public function __construct(string $fieldName, string $dataType, int $dimension, ?string $description = null)
+    public function __construct(string $fieldName, string $dataType, int $dim, ?string $description = null)
     {
         $this->fieldName = $fieldName;
         $this->dataType = $dataType;
-        $this->dimension = $dimension;
+        $this->dim = $dim;
         $this->description = $description;
     }
 
@@ -22,8 +24,8 @@ class VectorField
         return [
             'fieldName' => $this->fieldName,
             'dataType' => $this->dataType,
-            "elementTypeParam" => [
-                "dim" => $this->dimension,
+            "elementTypeParams" => [
+                "dim" =>  $this->dim,
             ],
             'description' => $this->description,
         ];

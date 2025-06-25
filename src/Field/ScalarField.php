@@ -2,74 +2,42 @@
 
 namespace Milvus\Field;
 
-class ScalarField
-{
-    // 支援型別常數
-    public const TYPE_VARCHAR = 'VarChar';
-    public const TYPE_BOOLEAN = 'Boolean';
-    public const TYPE_INT = 'Int';
-    public const TYPE_FLOAT = 'Float';
-    public const TYPE_DOUBLE = 'Double';
-    public const TYPE_ARRAY = 'Array';
-    public const TYPE_JSON = 'JSON';
+use Milvus\FieldInterface;
+use Milvus\DataType;
 
+class ScalarField implements FieldInterface
+{
     private string $fieldName;
     private string $dataType;
-    private bool $isPrimary = false;
-    private bool $isNullable = true;
+    private bool $nullable = false;
     private ?string $description;
+    private ?int $max_length = null;
 
-    public function __construct(string $fieldName, string $dataType, ?string $description = null)
+    public function __construct(string $fieldName, string $dataType, ?int $max_length = null, ?string $description = null)
     {
         $this->fieldName = $fieldName;
         $this->dataType = $dataType;
+        $this->max_length = $max_length;
         $this->description = $description;
     }
 
     public function toArray(): array
     {
-        return [
+        $arr = [
             'fieldName' => $this->fieldName,
             'dataType' => $this->dataType,
-            'isPrimary' => $this->isPrimary,
-            'isNullable' => $this->isNullable,
             'description' => $this->description,
         ];
-    }
 
-    // 靜態工廠方法
-    public static function varchar(string $fieldName, ?string $description = null): self
-    {
-        return new self($fieldName, self::TYPE_VARCHAR, $description);
-    }
+        if ($this->nullable) {
+            $arr['nullable'] = true;
+        }
 
-    public static function boolean(string $fieldName, ?string $description = null): self
-    {
-        return new self($fieldName, self::TYPE_BOOLEAN, $description);
-    }
-
-    public static function int(string $fieldName, ?string $description = null): self
-    {
-        return new self($fieldName, self::TYPE_INT, $description);
-    }
-
-    public static function float(string $fieldName, ?string $description = null): self
-    {
-        return new self($fieldName, self::TYPE_FLOAT, $description);
-    }
-
-    public static function double(string $fieldName, ?string $description = null): self
-    {
-        return new self($fieldName, self::TYPE_DOUBLE, $description);
-    }
-
-    public static function array(string $fieldName, ?string $description = null): self
-    {
-        return new self($fieldName, self::TYPE_ARRAY, $description);
-    }
-
-    public static function json(string $fieldName, ?string $description = null): self
-    {
-        return new self($fieldName, self::TYPE_JSON, $description);
+        if ($this->dataType === DataType::VARCHAR && $this->max_length !== null) {
+            $arr['elementTypeParams'] = [
+                'max_length' =>  $this->max_length
+            ];
+        }
+        return $arr;
     }
 }
