@@ -40,7 +40,7 @@ class Collections
     {
         return $this->client->post("/v2/vectordb/collections/load", [
             "json" => [
-                "collection_name" => $collection_name
+                "collectionName" => $collection_name
             ],
         ]);
     }

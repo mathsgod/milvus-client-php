@@ -42,6 +42,16 @@ class Client
         return $this->collections()->rename($old_name, $new_name);
     }
 
+    public function loadCollection(string $collection_name)
+    {
+        return $this->collections()->load($collection_name);
+    }
+
+    public function releaseCollection(string $collection_name)
+    {
+        return $this->collections()->release($collection_name);
+    }
+
 
 
 
@@ -167,7 +177,7 @@ class Client
         return $data["data"];
     }
 
-    public function search(string $collection_name, string $anns_field, array $data, int $limit, ?array $search_params)
+    public function search(string $collection_name, string $anns_field, array $data, int $limit, ?array $search_params = null)
     {
         return (new Entities($this))->search(
             $collection_name,
