@@ -13,12 +13,19 @@ class Client
         ?string $token = null,
         ?float $timeout = null,
     ) {
+        $headers = [
+            "Content-Type" => "application/json",
+        ];
+
+        if ($token) {
+            $headers["Authorization"] = "Bearer " . $token;
+        }
+
+
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => $uri,
             "verify" => false,
-            "headers" => [
-                "Content-Type" => "application/json",
-            ]
+            "headers" => $headers,
         ]);
     }
 
@@ -32,19 +39,49 @@ class Client
         $this->aliases()->alter($collection_name, $alias);
     }
 
+    public function alterCollectionField(
+        string $collection_name,
+        string $field_name,
+        array $field_params,
+        string $db_name = ""
+    ) {
+        return $this->collections()->alterField(
+            $collection_name,
+            $field_name,
+            $field_params,
+            $db_name,
+        );
+    }
+
     public function alterCollectionProperties(string $collection_name, array $properties)
     {
         return $this->collections()->alterProperties($collection_name, $properties);
     }
 
-    public function collections()
+    private function collections()
     {
         return new Collections($this);
     }
 
+    //Authentication
     public function createAlias(string $collection_name, string $alias)
     {
         $this->aliases()->create($collection_name, $alias);
+    }
+
+    public function createUser(string $user_name, string $password)
+    {
+        return $this->users()->create($user_name, $password);
+    }
+
+    public function describeRole(string $role_name): array
+    {
+        return $this->roles()->describe($role_name);
+    }
+
+    public function describeUser(string $user_name): array
+    {
+        return $this->users()->describe($user_name);
     }
 
     public function createCollection(
@@ -76,6 +113,11 @@ class Client
     public function createDatabase(string $database_name, ?array $properties = null)
     {
         return $this->databases()->create($database_name, $properties);
+    }
+
+    public function createRole(string $role_name)
+    {
+        $this->roles()->create($role_name);
     }
 
     public function createSchema(bool $auto_id = false, bool $enable_dynamic_field = false)
@@ -195,12 +237,7 @@ class Client
         return $this->collections()->rename($old_name, $new_name);
     }
 
-    public function role(string $roleName)
-    {
-        return new Role($this, $roleName);
-    }
-
-    public function roles()
+    private function roles()
     {
         return new Roles($this);
     }
@@ -221,11 +258,6 @@ class Client
         array $data,
     ) {
         return (new Entities($this))->upsert($collection_name, $data);
-    }
-
-    public function user(string $userName)
-    {
-        return new User($this, $userName);
     }
 
     public function users()

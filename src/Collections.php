@@ -14,6 +14,20 @@ class Collections
         $this->client = $client;
     }
 
+    public function alterField(
+        string $collection_name,
+        string $field_name,
+        array $field_params
+    ) {
+        return $this->client->post("/v2/vectordb/collections/fields/alter_properties", [
+            "json" => [
+                "collectionName" => $collection_name,
+                "fieldName" => $field_name,
+                "fieldParams" => $field_params,
+            ],
+        ]);
+    }
+
 
     public function has(string $collectionName)
     {
