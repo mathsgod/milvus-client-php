@@ -15,7 +15,7 @@ class Aliases
     public function list()
     {
         return $this->client->post("/v2/vectordb/aliases/list", [
-            "json" => [],
+            "body" => "{}"
         ]);
     }
 
@@ -25,6 +25,38 @@ class Aliases
             "json" => [
                 "aliasName" => $alias,
                 "collectionName" => $collection_name,
+            ],
+        ]);
+    }
+
+
+    /**
+     * This operation reassigns the alias of one collection to another.
+     */
+    public function alter(string $collection_name, string $alias)
+    {
+        return $this->client->post("/v2/vectordb/aliases/alter", [
+            "json" => [
+                "aliasName" => $alias,
+                "collectionName" => $collection_name,
+            ],
+        ]);
+    }
+
+    public function describe(string $alias)
+    {
+        return $this->client->post("/v2/vectordb/aliases/describe", [
+            "json" => [
+                "aliasName" => $alias,
+            ],
+        ]);
+    }
+
+    public function drop(string $alias)
+    {
+        return $this->client->post("/v2/vectordb/aliases/drop", [
+            "json" => [
+                "aliasName" => $alias,
             ],
         ]);
     }

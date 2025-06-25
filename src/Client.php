@@ -22,9 +22,14 @@ class Client
         ]);
     }
 
-    public function createSchema(bool $auto_id = false, bool $enable_dynamic_field = false)
+    private function aliases()
     {
-        return new CollectionSchema($auto_id, $enable_dynamic_field);
+        return new Aliases($this);
+    }
+
+    public function alterAlias(string $collection_name, string $alias)
+    {
+        $this->aliases()->alter($collection_name, $alias);
     }
 
     public function alterCollectionProperties(string $collection_name, array $properties)
@@ -32,78 +37,15 @@ class Client
         return $this->collections()->alterProperties($collection_name, $properties);
     }
 
-    public function dropCollectionProperties(string $collection_name, array $property_keys)
+    public function collections()
     {
-        return $this->collections()->dropProperties($collection_name, $property_keys);
+        return new Collections($this);
     }
 
-
-    public function describeCollection(string $collection_name)
+    public function createAlias(string $collection_name, string $alias)
     {
-        return $this->collections()->describe($collection_name);
+        $this->aliases()->create($collection_name, $alias);
     }
-
-    public function dropCollection(string $collection_name)
-    {
-        return $this->collections()->drop($collection_name);
-    }
-
-    public function listCollections()
-    {
-        return $this->collections()->list();
-    }
-
-    public function renameCollection(string $old_name, string $new_name)
-    {
-        return $this->collections()->rename($old_name, $new_name);
-    }
-
-    public function loadCollection(string $collection_name)
-    {
-        return $this->collections()->load($collection_name);
-    }
-
-    public function releaseCollection(string $collection_name)
-    {
-        return $this->collections()->release($collection_name);
-    }
-
-
-
-
-    public function prepareIndexParams()
-    {
-
-        return new IndexParams();
-    }
-
-    public function insert(
-        string $collection_name,
-        array $data,
-    ) {
-        return (new Entities($this))->insert($collection_name, $data);
-    }
-
-    public function upsert(
-        string $collection_name,
-        array $data,
-    ) {
-        return (new Entities($this))->upsert($collection_name, $data);
-    }
-
-    public function delete(
-        string $collection_name,
-        ?string $filter = null,
-        ?array $ids = null
-    ) {
-        return (new Entities($this))->delete($collection_name, $filter, $ids);
-    }
-
-    public function createDatabase(string $database_name, ?array $properties = null)
-    {
-        return $this->databases()->create($database_name, $properties);
-    }
-
 
     public function createCollection(
         string $collection_name,
@@ -131,26 +73,52 @@ class Client
         );
     }
 
-
-    public function listDatabases()
+    public function createDatabase(string $database_name, ?array $properties = null)
     {
-        return $this->databases()->list();
+        return $this->databases()->create($database_name, $properties);
     }
 
+    public function createSchema(bool $auto_id = false, bool $enable_dynamic_field = false)
+    {
+        return new CollectionSchema($auto_id, $enable_dynamic_field);
+    }
 
     public function databases()
     {
         return new Databases($this);
     }
 
-    public function aliases()
-    {
-        return new Aliases($this);
+    public function delete(
+        string $collection_name,
+        ?string $filter = null,
+        ?array $ids = null
+    ) {
+        return (new Entities($this))->delete($collection_name, $filter, $ids);
     }
 
-    public function partitions(string $collectionName)
+    public function describeAlias(string $alias): array
     {
-        return new Partitions($this, $collectionName);
+        return $this->aliases()->describe($alias);
+    }
+
+    public function describeCollection(string $collection_name)
+    {
+        return $this->collections()->describe($collection_name);
+    }
+
+    public function dropAlias(string $alias)
+    {
+        $this->aliases()->drop($alias);
+    }
+
+    public function dropCollection(string $collection_name)
+    {
+        return $this->collections()->drop($collection_name);
+    }
+
+    public function dropCollectionProperties(string $collection_name, array $property_keys)
+    {
+        return $this->collections()->dropProperties($collection_name, $property_keys);
     }
 
     public function entities(string $collectionName)
@@ -158,29 +126,46 @@ class Client
         return new Entities($this, $collectionName);
     }
 
-    public function collections()
+    public function getCollectionStats(string $collection_name): array
     {
-        return new Collections($this);
+        return $this->collections()->getStats($collection_name);
     }
 
-    public function role(string $roleName)
+    public function hasCollection(string $collection_name): bool
     {
-        return new Role($this, $roleName);
+        return $this->collections()->has($collection_name)["has"];
     }
 
-    public function roles()
-    {
-        return new Roles($this);
+    public function insert(
+        string $collection_name,
+        array $data,
+    ) {
+        return (new Entities($this))->insert($collection_name, $data);
     }
 
-    public function users()
+    public function listAliases(string $collection_name)
     {
-        return new Users($this);
+        return $this->aliases()->list($collection_name);
     }
 
-    public function user(string $userName)
+    public function listCollections()
     {
-        return new User($this, $userName);
+        return $this->collections()->list();
+    }
+
+    public function listDatabases()
+    {
+        return $this->databases()->list();
+    }
+
+    public function loadCollection(string $collection_name)
+    {
+        return $this->collections()->load($collection_name);
+    }
+
+    public function partitions(string $collectionName)
+    {
+        return new Partitions($this, $collectionName);
     }
 
     public function post($uri, array $options = []): array
@@ -195,6 +180,31 @@ class Client
         return $data["data"];
     }
 
+    public function prepareIndexParams()
+    {
+        return new IndexParams();
+    }
+
+    public function releaseCollection(string $collection_name)
+    {
+        return $this->collections()->release($collection_name);
+    }
+
+    public function renameCollection(string $old_name, string $new_name)
+    {
+        return $this->collections()->rename($old_name, $new_name);
+    }
+
+    public function role(string $roleName)
+    {
+        return new Role($this, $roleName);
+    }
+
+    public function roles()
+    {
+        return new Roles($this);
+    }
+
     public function search(string $collection_name, string $anns_field, array $data, int $limit, ?array $search_params = null)
     {
         return (new Entities($this))->search(
@@ -204,5 +214,22 @@ class Client
             $limit,
             $search_params
         );
+    }
+
+    public function upsert(
+        string $collection_name,
+        array $data,
+    ) {
+        return (new Entities($this))->upsert($collection_name, $data);
+    }
+
+    public function user(string $userName)
+    {
+        return new User($this, $userName);
+    }
+
+    public function users()
+    {
+        return new Users($this);
     }
 }
