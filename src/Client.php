@@ -27,6 +27,22 @@ class Client
         return new CollectionSchema($auto_id, $enable_dynamic_field);
     }
 
+    public function alterCollectionProperties(string $collection_name, array $properties)
+    {
+        return $this->collections()->alterProperties($collection_name, $properties);
+    }
+
+    public function dropCollectionProperties(string $collection_name, array $property_keys)
+    {
+        return $this->collections()->dropProperties($collection_name, $property_keys);
+    }
+
+
+    public function describeCollection(string $collection_name)
+    {
+        return $this->collections()->describe($collection_name);
+    }
+
     public function dropCollection(string $collection_name)
     {
         return $this->collections()->drop($collection_name);
@@ -94,11 +110,12 @@ class Client
         ?int $dimension = 0,
         string $primary_field_name = "id",
         string $vector_field_name = "vector",
-        string $metric_type = "CONSINE",
+        string $metric_type = "COSINE",
         bool $auto_id = false,
         ?float $timeout = null,
         ?CollectionSchema $schema = null,
-        ?IndexParams $index_params = null
+        ?IndexParams $index_params = null,
+        ?bool $enable_dynamic_field = false
     ) {
         return $this->collections()->create(
             $collection_name,
@@ -109,7 +126,8 @@ class Client
             $auto_id,
             $timeout,
             $schema,
-            $index_params
+            $index_params,
+            $enable_dynamic_field
         );
     }
 

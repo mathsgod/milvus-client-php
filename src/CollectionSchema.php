@@ -6,7 +6,7 @@ use Milvus\Field\PrimaryField;
 use Milvus\Field\VectorField;
 use Milvus\Field\ScalarField;
 
-class CollectionSchema
+class CollectionSchema implements \JsonSerializable
 {
     private $fields = [];
     private bool $auto_id;
@@ -20,9 +20,7 @@ class CollectionSchema
         $this->fields = [];
     }
 
-
-
-    public function toArray()
+    public function jsonSerialize(): mixed
     {
         return [
             'autoID' => $this->auto_id,

@@ -73,6 +73,26 @@ class Collections
         ]);
     }
 
+    public function dropProperties(string $collection_name, array $property_keys)
+    {
+        return $this->client->post("/v2/vectordb/collections/drop_properties", [
+            "json" => [
+                "collectionName" => $collection_name,
+                "propertyKeys" => $property_keys
+            ],
+        ]);
+    }
+
+    public function alterProperties(string $collection_name, array $properties)
+    {
+        return $this->client->post("/v2/vectordb/collections/alter_properties", [
+            "json" => [
+                "collectionName" => $collection_name,
+                "properties" => $properties
+            ],
+        ]);
+    }
+
     public function rename(string $old_name, string $new_name)
     {
         return $this->client->post("/v2/vectordb/collections/rename", [
@@ -113,19 +133,34 @@ class Collections
         int $dimension,
         string $primary_field_name = "id",
         string $vector_field_name = "vector",
-        string $metric_type = "CONSINE",
+        string $metric_type = "COSINE",
         bool $auto_id = false,
         ?float $timeout = null,
         ?CollectionSchema $schema = null,
-        ?IndexParams $index_params = null
+        ?IndexParams $index_params = null,
+        ?bool $enable_dynamic_field = false
     ) {
+        $data = ["collectionName" => $collection_name];
+        if ($schema) {
+            $data['schema'] = $schema;
+        }
+        if ($index_params) {
+            $data['indexParams'] = $index_params;
+        }
+
+        if ($enable_dynamic_field !== null) {
+            $data['enable_dynamic_field'] = $enable_dynamic_field;
+        }
+        $data['dimension'] = $dimension;
+        $data['primaryFieldName'] = $primary_field_name;
+        $data['vectorFieldName'] = $vector_field_name;
+        $data['metricType'] = $metric_type;
+        $data['autoID'] = $auto_id;
+
+
 
         return $this->client->post("/v2/vectordb/collections/create", [
-            "json" => [
-                "collectionName" => $collection_name,
-                "schema" => $schema->toArray(),
-                "indexParams" => $index_params
-            ],
+            "json" => $data,
         ]);
     }
 }
