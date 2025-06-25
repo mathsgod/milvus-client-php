@@ -58,4 +58,14 @@ class Databases
             ],
         ]);
     }
+
+    public function dropProperties(string $dbName, array $propertyKeys)
+    {
+        return $this->client->post("/v2/vectordb/databases/drop_properties", [
+            "json" => [
+                "dbName" => $dbName,
+                "propertyKeys" => $propertyKeys,
+            ],
+        ]);
+    }
 }

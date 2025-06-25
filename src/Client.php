@@ -5,11 +5,12 @@ namespace Milvus;
 class Client
 {
     private $client;
+    private $dbName = "default";
     public function __construct(
         string $uri = "http://localhost:19530",
         ?string $user = null,
         ?string $password = null,
-        ?string $db_name = null,
+        ?string $db_name = "default",
         ?string $token = null,
         ?float $timeout = null,
     ) {
@@ -21,6 +22,10 @@ class Client
             $headers["Authorization"] = "Bearer " . $token;
         }
 
+        if ($db_name) {
+            $this->dbName = $db_name;
+        }
+
 
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => $uri,
@@ -28,6 +33,41 @@ class Client
             "headers" => $headers,
         ]);
     }
+
+    //--- START OF DATABASES ---
+    public function createDatabase(string $database_name, ?array $properties = null)
+    {
+        return $this->databases()->create($database_name, $properties);
+    }
+
+    public function describeDatabase(string $db_name): array
+    {
+        return $this->databases()->describe($db_name);
+    }
+
+    public function dropDatabase(string $db_name)
+    {
+        return $this->databases()->drop($db_name);
+    }
+
+    public function dropDatabaseProperties(string $db_name, array $property_keys)
+    {
+        return $this->databases()->dropProperties($db_name, $property_keys);
+    }
+
+    public function listDatabases()
+    {
+        return $this->databases()->list();
+    }
+
+    public function usingDatabase(string $db_name)
+    {
+        $this->dbName = $db_name;
+    }
+
+
+    //--- END OF DATABASES ---
+
 
     private function aliases()
     {
@@ -63,15 +103,21 @@ class Client
         return new Collections($this);
     }
 
-    //Authentication
     public function createAlias(string $collection_name, string $alias)
     {
         $this->aliases()->create($collection_name, $alias);
     }
 
+
+    //--- Authentication ---
+    public function createRole(string $role_name)
+    {
+        $this->roles()->create($role_name);
+    }
+
     public function createUser(string $user_name, string $password)
     {
-        return $this->users()->create($user_name, $password);
+        $this->users()->create($user_name, $password);
     }
 
     public function describeRole(string $role_name): array
@@ -84,6 +130,47 @@ class Client
         return $this->users()->describe($user_name);
     }
 
+    public function dropRole(string $role_name)
+    {
+        $this->roles()->drop($role_name);
+    }
+
+    public function dropUser(string $user_name)
+    {
+        $this->users()->drop($user_name);
+    }
+
+    public function grantPrivilege(
+        string $role_name,
+        string $object_type,
+        string $privilege,
+        string $object_name
+    ) {
+        $this->roles()->grantPrivilege(
+            $role_name,
+            $object_type,
+            $privilege,
+            $object_name
+        );
+    }
+    public function listRoles(): array
+    {
+        return $this->roles()->list();
+    }
+
+    public function listUsers(): array
+    {
+        return $this->users()->list();
+    }
+
+    public function updatePassword(string $user_name, string $old_password, string $new_password)
+    {
+        return $this->users()->updatePassword($user_name, $old_password, $new_password);
+    }
+    //--- End of Authentication ---
+
+
+    //-- Start of Collections ---
     public function createCollection(
         string $collection_name,
         ?int $dimension = 0,
@@ -110,22 +197,15 @@ class Client
         );
     }
 
-    public function createDatabase(string $database_name, ?array $properties = null)
-    {
-        return $this->databases()->create($database_name, $properties);
-    }
 
-    public function createRole(string $role_name)
-    {
-        $this->roles()->create($role_name);
-    }
+
 
     public function createSchema(bool $auto_id = false, bool $enable_dynamic_field = false)
     {
         return new CollectionSchema($auto_id, $enable_dynamic_field);
     }
 
-    public function databases()
+    private function databases()
     {
         return new Databases($this);
     }
@@ -195,10 +275,6 @@ class Client
         return $this->collections()->list();
     }
 
-    public function listDatabases()
-    {
-        return $this->databases()->list();
-    }
 
     public function loadCollection(string $collection_name)
     {

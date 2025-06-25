@@ -45,8 +45,12 @@ class Roles
         ]);
     }
 
-    public function grantPrivilege(string $role_name, string $object_type, string $object_name, string $privilege)
-    {
+    public function grantPrivilege(
+        string $role_name,
+        string $object_type,
+        string $privilege,
+        string $object_name
+    ) {
         return $this->client->post("/v2/vectordb/roles/grant_privilege", [
             "body" => json_encode([
                 "roleName" => $role_name,
