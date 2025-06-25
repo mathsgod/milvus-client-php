@@ -17,9 +17,7 @@ class Databases
     public function list()
     {
         return $this->client->post("/v2/vectordb/databases/list", [
-            "headers" => [
-                "Content-Type" => "application/json",
-            ]
+            "body" => "{}"
         ]);
     }
 
