@@ -14,38 +14,22 @@ class Databases
         $this->client = $client;
     }
 
-    public function list()
-    {
-        return $this->client->post("/v2/vectordb/databases/list", [
-            "body" => "{}"
-        ]);
-    }
-
-    public function create(string $db_name, array $properties = [])
-    {
-        return $this->client->post("/v2/vectordb/databases/create", [
-            "json" => [
-                "dbName" => $db_name,
-                "properties" => $properties,
-            ],
-        ]);
-    }
-
-    public function alter(string $db_name, array $properties = [])
+    public function alter(string $dbName, array $properties = [])
     {
         return $this->client->post("/v2/vectordb/databases/alter", [
             "json" => [
-                "dbName" => $db_name,
+                "dbName" => $dbName,
                 "properties" => $properties,
             ],
         ]);
     }
 
-    public function drop(string $db_name)
+    public function create(string $dbName, array $properties = [])
     {
-        return $this->client->post("/v2/vectordb/databases/drop", [
+        return $this->client->post("/v2/vectordb/databases/create", [
             "json" => [
-                "dbName" => $db_name,
+                "dbName" => $dbName,
+                "properties" => $properties,
             ],
         ]);
     }
@@ -59,6 +43,15 @@ class Databases
         ]);
     }
 
+    public function drop(string $dbName)
+    {
+        return $this->client->post("/v2/vectordb/databases/drop", [
+            "json" => [
+                "dbName" => $dbName,
+            ],
+        ]);
+    }
+
     public function dropProperties(string $dbName, array $propertyKeys)
     {
         return $this->client->post("/v2/vectordb/databases/drop_properties", [
@@ -66,6 +59,13 @@ class Databases
                 "dbName" => $dbName,
                 "propertyKeys" => $propertyKeys,
             ],
+        ]);
+    }
+
+    public function list()
+    {
+        return $this->client->post("/v2/vectordb/databases/list", [
+            "body" => "{}"
         ]);
     }
 }
