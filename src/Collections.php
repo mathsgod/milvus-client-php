@@ -14,24 +14,79 @@ class Collections
         $this->client = $client;
     }
 
-    public function alterField(
-        string $collection_name,
-        string $field_name,
-        array $field_params
+    public function alterFieldProperties(
+        string $collectionName,
+        string $fieldName,
+        array $fieldParams
     ) {
         return $this->client->post("/v2/vectordb/collections/fields/alter_properties", [
             "json" => [
-                "collectionName" => $collection_name,
-                "fieldName" => $field_name,
-                "fieldParams" => $field_params,
+                "collectionName" => $collectionName,
+                "fieldName" => $fieldName,
+                "fieldParams" => $fieldParams,
             ],
         ]);
     }
 
-
-    public function has(string $collectionName)
+    public function alterProperties(string $collectionName, array $properties)
     {
-        return $this->client->post("/v2/vectordb/collections/has", [
+        return $this->client->post("/v2/vectordb/collections/alter_properties", [
+            "json" => [
+                "collectionName" => $collectionName,
+                "properties" => $properties
+            ],
+        ]);
+    }
+
+    /**
+     * This operation compacts the collection by merging small segments into larger ones. It is recommended to call this operation after inserting a large amount of data into a collection.
+     */
+    public function compact(string $collectionName)
+    {
+        return $this->client->post("/v2/vectordb/collections/compact", [
+            "json" => [
+                "collectionName" => $collectionName
+            ],
+        ]);
+    }
+
+    public function create(
+        string $collectionName,
+        int $dimension,
+        string $primaryFieldName = "id",
+        string $vectorFieldName = "vector",
+        string $metricType,
+        string $idType,
+        bool $autoID = false,
+        ?CollectionSchema $schema = null,
+        ?IndexParams $indexParams = null,
+        ?bool $enableDynamicField = false
+    ) {
+        $data = ["collectionName" => $collectionName];
+        if ($schema) {
+            $data['schema'] = $schema;
+        }
+        if ($indexParams) {
+            $data['indexParams'] = $indexParams;
+        }
+        if ($enableDynamicField !== null) {
+            $data['enable_dynamic_field'] = $enableDynamicField;
+        }
+        $data['dimension'] = $dimension;
+        $data['primaryFieldName'] = $primaryFieldName;
+        $data['vectorFieldName'] = $vectorFieldName;
+        $data['metricType'] = $metricType;
+        $data['idType'] = $idType;
+        $data['autoID'] = $autoID;
+
+        return $this->client->post("/v2/vectordb/collections/create", [
+            "json" => $data,
+        ]);
+    }
+
+    public function describe(string $collectionName)
+    {
+        return $this->client->post("/v2/vectordb/collections/describe", [
             "json" => [
                 "collectionName" => $collectionName,
                 "dbName" => $this->dbName
@@ -39,6 +94,50 @@ class Collections
         ]);
     }
 
+    public function drop(string $collectionName)
+    {
+        return $this->client->post("/v2/vectordb/collections/drop", [
+            "json" => [
+                "collectionName" => $collectionName,
+                "dbName" => $this->dbName
+            ],
+        ]);
+    }
+
+    public function dropProperties(string $collectionName, array $propertyKeys)
+    {
+        return $this->client->post("/v2/vectordb/collections/drop_properties", [
+            "json" => [
+                "collectionName" => $collectionName,
+                "propertyKeys" => $propertyKeys
+            ],
+        ]);
+    }
+
+    /**
+     * This operation flushes the streaming data and seals segments. It is recommended to call this operation after all the data has been inserted into a collection.
+     */
+    public function flush(string $collectionName)
+    {
+        return $this->client->post("/v2/vectordb/collections/flush", [
+            "json" => [
+                "collectionName" => $collectionName
+            ],
+        ]);
+    }
+
+    /**
+     * This operation returns the load status of a specific collection.
+     */
+    public function getLoadState(string $collectionName, ?string $partitionNames = null)
+    {
+        return $this->client->post("/v2/vectordb/collections/getLoadState", [
+            "json" => [
+                "collection_name" => $collectionName,
+                "partition_names" => $partitionNames,
+            ],
+        ]);
+    }
 
     public function getStats(string $collectionName)
     {
@@ -50,27 +149,9 @@ class Collections
         ]);
     }
 
-    public function load(string $collection_name)
+    public function has(string $collectionName)
     {
-        return $this->client->post("/v2/vectordb/collections/load", [
-            "json" => [
-                "collectionName" => $collection_name
-            ],
-        ]);
-    }
-
-    public function getLoadState(string $collection_name)
-    {
-        return $this->client->post("/v2/vectordb/collections/getLoadState", [
-            "json" => [
-                "collection_name" => $collection_name
-            ],
-        ]);
-    }
-
-    public function drop(string $collectionName)
-    {
-        return $this->client->post("/v2/vectordb/collections/drop", [
+        return $this->client->post("/v2/vectordb/collections/has", [
             "json" => [
                 "collectionName" => $collectionName,
                 "dbName" => $this->dbName
@@ -87,32 +168,11 @@ class Collections
         ]);
     }
 
-    public function dropProperties(string $collection_name, array $property_keys)
+    public function load(string $collectionName)
     {
-        return $this->client->post("/v2/vectordb/collections/drop_properties", [
+        return $this->client->post("/v2/vectordb/collections/load", [
             "json" => [
-                "collectionName" => $collection_name,
-                "propertyKeys" => $property_keys
-            ],
-        ]);
-    }
-
-    public function alterProperties(string $collection_name, array $properties)
-    {
-        return $this->client->post("/v2/vectordb/collections/alter_properties", [
-            "json" => [
-                "collectionName" => $collection_name,
-                "properties" => $properties
-            ],
-        ]);
-    }
-
-    public function rename(string $old_name, string $new_name)
-    {
-        return $this->client->post("/v2/vectordb/collections/rename", [
-            "json" => [
-                "collectionName" => $old_name,
-                "newCollectionName" => $new_name
+                "collectionName" => $collectionName
             ],
         ]);
     }
@@ -127,54 +187,25 @@ class Collections
         ]);
     }
 
-    public function describe(string $collectionName)
+    public function rename(string $oldName, string $newName)
     {
-        return $this->client->post("/v2/vectordb/collections/describe", [
+        return $this->client->post("/v2/vectordb/collections/rename", [
             "json" => [
-                "collectionName" => $collectionName,
-                "dbName" => $this->dbName
+                "collectionName" => $oldName,
+                "newCollectionName" => $newName
             ],
         ]);
     }
 
-    public function delete(string $collection_name, ?string $filter = null, ?array $ids = null, ?string $partition_name = null)
+    /**
+     * This operaton refreshes the load of a collection.
+     */
+    public function refreshLoad(string $collectionName)
     {
-        return (new Entities($this->client, $collection_name))->delete($filter, $ids, $partition_name);
-    }
-
-    public function create(
-        string $collection_name,
-        int $dimension,
-        string $primary_field_name = "id",
-        string $vector_field_name = "vector",
-        string $metric_type = "COSINE",
-        bool $auto_id = false,
-        ?float $timeout = null,
-        ?CollectionSchema $schema = null,
-        ?IndexParams $index_params = null,
-        ?bool $enable_dynamic_field = false
-    ) {
-        $data = ["collectionName" => $collection_name];
-        if ($schema) {
-            $data['schema'] = $schema;
-        }
-        if ($index_params) {
-            $data['indexParams'] = $index_params;
-        }
-
-        if ($enable_dynamic_field !== null) {
-            $data['enable_dynamic_field'] = $enable_dynamic_field;
-        }
-        $data['dimension'] = $dimension;
-        $data['primaryFieldName'] = $primary_field_name;
-        $data['vectorFieldName'] = $vector_field_name;
-        $data['metricType'] = $metric_type;
-        $data['autoID'] = $auto_id;
-
-
-
-        return $this->client->post("/v2/vectordb/collections/create", [
-            "json" => $data,
+        return $this->client->post("/v2/vectordb/collections/refresh_load", [
+            "json" => [
+                "collectionName" => $collectionName
+            ],
         ]);
     }
 }

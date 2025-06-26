@@ -12,16 +12,12 @@ class Aliases
         $this->client = $client;
     }
 
-    public function list()
+    /**
+     * This operation reassigns the alias of one collection to another.
+     */
+    public function alter(string $collection_name, string $alias)
     {
-        return $this->client->post("/v2/vectordb/aliases/list", [
-            "body" => "{}"
-        ]);
-    }
-
-    public function create(string $collection_name, string $alias)
-    {
-        return $this->client->post("/v2/vectordb/aliases/create", [
+        return $this->client->post("/v2/vectordb/aliases/alter", [
             "json" => [
                 "aliasName" => $alias,
                 "collectionName" => $collection_name,
@@ -29,13 +25,9 @@ class Aliases
         ]);
     }
 
-
-    /**
-     * This operation reassigns the alias of one collection to another.
-     */
-    public function alter(string $collection_name, string $alias)
+    public function create(string $collection_name, string $alias)
     {
-        return $this->client->post("/v2/vectordb/aliases/alter", [
+        return $this->client->post("/v2/vectordb/aliases/create", [
             "json" => [
                 "aliasName" => $alias,
                 "collectionName" => $collection_name,
@@ -58,6 +50,13 @@ class Aliases
             "json" => [
                 "aliasName" => $alias,
             ],
+        ]);
+    }
+
+    public function list()
+    {
+        return $this->client->post("/v2/vectordb/aliases/list", [
+            "body" => "{}"
         ]);
     }
 }

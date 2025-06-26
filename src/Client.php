@@ -97,7 +97,7 @@ class Client
         array $field_params,
         string $db_name = ""
     ) {
-        return $this->collections()->alterField(
+        return $this->collections()->alterFieldProperties(
             $collection_name,
             $field_name,
             $field_params,
@@ -355,5 +355,14 @@ class Client
 
 
     //--- Start of Management ---
-    public function createIndex() {}
+
+    public function createIndex(string $collection_name, IndexParams $index_params)
+    {
+        (new Indexes($this))->create($collection_name, $index_params);
+    }
+
+    public function listIndexes(string $collection_name): array
+    {
+        return (new Indexes($this))->list($collection_name);
+    }
 }
