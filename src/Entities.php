@@ -15,6 +15,19 @@ class Entities
     }
 
 
+    public function advancedSearch(string $collection_name, array $search, array $rerank, int $limit)
+    {
+
+        return $this->client->post('/v2/vectordb/entities/advanced_search', [
+            'json' => [
+                'collectionName' => $collection_name,
+                'search' => $search,
+                'rerank' => $rerank,
+                'limit' => $limit
+            ]
+        ]);
+    }
+
     public function insert(string $collection_name, array $data)
     {
         return  $this->client->post('/v2/vectordb/entities/insert', [

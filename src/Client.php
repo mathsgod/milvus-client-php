@@ -34,6 +34,20 @@ class Client
         ]);
     }
 
+    public function hybridSearch(
+        string $collection_name,
+        array $reqs,
+        array $ranker,
+        int $limit
+    ) {
+        return (new Entities($this))->advancedSearch(
+            $collection_name,
+            $reqs,
+            $ranker,
+            $limit
+        );
+    }
+
     //--- START OF DATABASES ---
     public function createDatabase(string $database_name, ?array $properties = null)
     {
@@ -64,8 +78,6 @@ class Client
     {
         $this->dbName = $db_name;
     }
-
-
     //--- END OF DATABASES ---
 
 
@@ -340,4 +352,8 @@ class Client
     {
         return new Users($this);
     }
+
+
+    //--- Start of Management ---
+    public function createIndex() {}
 }
