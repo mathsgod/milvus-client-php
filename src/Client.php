@@ -332,8 +332,19 @@ class Client
         return new Roles($this);
     }
 
-    public function search(string $collection_name, string $anns_field, array $data, int $limit, ?array $search_params = null)
+    public function query(string $collection_name, string $filter, ?array $output_fields = null)
     {
+        return (new Entities($this))->query($collection_name, $filter, $output_fields);
+    }
+
+
+    public function search(
+        string $collection_name,
+        string $anns_field,
+        array $data,
+        int $limit,
+        ?array $search_params = null
+    ) {
         return (new Entities($this))->search(
             $collection_name,
             $anns_field,
