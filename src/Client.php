@@ -38,13 +38,15 @@ class Client
         string $collection_name,
         array $reqs,
         array $ranker,
-        int $limit
+        int $limit,
+        array $outputFields = []
     ) {
-        return (new Entities($this))->advancedSearch(
+        return (new Entities($this))->hybridSearch(
             $collection_name,
             $reqs,
             $ranker,
-            $limit
+            $limit,
+            $outputFields
         );
     }
 

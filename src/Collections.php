@@ -53,10 +53,10 @@ class Collections
     public function create(
         string $collectionName,
         int $dimension,
-        string $primaryFieldName = "id",
-        string $vectorFieldName = "vector",
         string $metricType,
         string $idType,
+        string $primaryFieldName = "id",
+        string $vectorFieldName = "vector",
         bool $autoID = false,
         ?CollectionSchema $schema = null,
         ?IndexParams $indexParams = null,

@@ -14,6 +14,18 @@ class Entities
         $this->client = $client;
     }
 
+    public function hybridSearch(string $collection_name, array $search, array $rerank, int $limit, array $outputFields = [])
+    {
+        return $this->client->post('/v2/vectordb/entities/hybrid_search', [
+            'json' => [
+                'collectionName' => $collection_name,
+                'search' => $search,
+                'rerank' => $rerank,
+                'limit' => $limit,
+                'outputFields' => $outputFields
+            ]
+        ]);
+    }
 
     public function advancedSearch(string $collection_name, array $search, array $rerank, int $limit)
     {
