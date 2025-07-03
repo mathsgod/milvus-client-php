@@ -7,7 +7,6 @@ use Exception;
 class Entities
 {
     private $client;
-    private $collectionName;
 
     public function __construct(Client $client)
     {
@@ -78,12 +77,13 @@ class Entities
     /**
      * This operation inserts data into a specific collection.
      */
-    public function insert(string $collection_name, array $data, ?string $partition_name)
+    public function insert(string $collection_name, array $data, ?string $partitionName = null)
     {
         return  $this->client->post('/v2/vectordb/entities/insert', [
             'json' => [
                 'collectionName' => $collection_name,
-                'data' => $data
+                'data' => $data,
+                'partitionName' => $partition_name
             ]
         ]);
     }
@@ -92,8 +92,14 @@ class Entities
     /**
      * This operation conducts a filtering on the scalar field with a specified boolean expression.
      */
-    public function query(string $collectionName, string $filter, ?int $limit, ?int $offset, ?array $outputFields = null, ?string $partitionNames = null)
-    {
+    public function query(
+        string $collectionName,
+        string $filter,
+        ?int $limit = null,
+        ?int $offset = null,
+        ?array $outputFields = null,
+        ?string $partitionNames = null
+    ) {
         return  $this->client->post('/v2/vectordb/entities/query', [
             'json' => [
                 'collectionName' => $collectionName,
@@ -110,7 +116,7 @@ class Entities
      * This operation conducts a vector similarity search with an optional scalar filtering expression.
      */
     public function search(
-        string $collection_name,
+        string $collectionName,
         array $data,
         string $annsField,
         ?string  $filter = null,
@@ -123,7 +129,7 @@ class Entities
         ?string $consistencyLevel = null
     ) {
         $json = [
-            'collectionName' => $collection_name,
+            'collectionName' => $collectionName,
             'data' => $data,
             'annsField' => $annsField,
             "limit" => $limit,
@@ -157,12 +163,12 @@ class Entities
         ]);
     }
 
-    public function advancedSearch(string $collection_name, array $search, array $rerank, int $limit)
+    public function advancedSearch(string $collectionName, array $search, array $rerank, int $limit)
     {
 
         return $this->client->post('/v2/vectordb/entities/advanced_search', [
             'json' => [
-                'collectionName' => $collection_name,
+                'collectionName' => $collectionName,
                 'search' => $search,
                 'rerank' => $rerank,
                 'limit' => $limit

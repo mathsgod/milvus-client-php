@@ -220,7 +220,7 @@ class Client
         return new CollectionSchema($auto_id, $enable_dynamic_field);
     }
 
-    private function databases()
+    public function databases()
     {
         return new Databases($this);
     }
@@ -263,9 +263,9 @@ class Client
         return $this->collections()->dropProperties($collection_name, $property_keys);
     }
 
-    public function entities(string $collectionName)
+    public function entities()
     {
-        return new Entities($this, $collectionName);
+        return new Entities($this);
     }
 
     public function getCollectionStats(string $collection_name): array
@@ -278,11 +278,12 @@ class Client
         return $this->collections()->has($collection_name)["has"];
     }
 
+
     public function insert(
         string $collection_name,
         array $data,
     ) {
-        return (new Entities($this))->insert($collection_name, $data);
+        return $this->entities()->insert($collection_name, $data);
     }
 
     public function listAliases(string $collection_name)
@@ -333,38 +334,52 @@ class Client
         return $this->collections()->rename($old_name, $new_name);
     }
 
-    private function roles()
+    public  function roles()
     {
         return new Roles($this);
     }
 
-    public function query(string $collection_name, string $filter, ?array $output_fields = null)
-    {
-        return (new Entities($this))->query($collection_name, $filter, $output_fields);
+    public function query(
+        string $collection_name,
+        string $filter,
+        ?array $output_fields = null
+    ) {
+        return (new Entities($this))
+            ->query(
+                collectionName: $collection_name,
+                filter: $filter,
+                outputFields: $output_fields
+            );
     }
 
 
     public function search(
         string $collection_name,
-        string $anns_field,
         array $data,
-        int $limit,
-        ?array $search_params = null
+        string $filter = "",
+        int $limit = 10,
+        ?array $output_fields = null,
+        ?array $search_params = null,
+        ?string $anns_field = null,
+        ?array $partition_names = null,
+
     ) {
         return (new Entities($this))->search(
-            $collection_name,
-            $anns_field,
-            $data,
-            $limit,
-            $search_params
+            collectionName: $collection_name,
+            data: $data,
+            annsField: $anns_field,
+            limit: $limit,
+            searchParams: $search_params,
+            partitionNames: $partition_names,
         );
     }
 
     public function upsert(
         string $collection_name,
         array $data,
+        ?string $partition_name = null
     ) {
-        return (new Entities($this))->upsert($collection_name, $data);
+        return $this->entities()->upsert($collection_name, $data, $partition_name);
     }
 
     public function users()
