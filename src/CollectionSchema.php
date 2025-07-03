@@ -11,9 +11,16 @@ class CollectionSchema implements \JsonSerializable
     private $fields = [];
     private bool $auto_id;
     private bool $enable_dynamic_field;
-
-    public function __construct(bool $auto_id = false, bool $enable_dynamic_field = false)
-    {
+    private string $description;
+    
+    public function __construct(
+        array $fields = [],
+        string $description,
+        bool $auto_id = false,
+        bool $enable_dynamic_field = false
+    ) {
+        $this->fields = $fields;
+        $this->description = $description;
         $this->auto_id = $auto_id;
         $this->enable_dynamic_field = $enable_dynamic_field;
 
@@ -37,11 +44,11 @@ class CollectionSchema implements \JsonSerializable
     }
 
 
-    public function addField(
+    public function add_field(
         string $field_name,
         string $datatype,
         bool $is_primary = false,
-        int $max_lenght = 0,
+        int $max_length = 0, // corrected spelling from 'max_lenght' to 'max_length'
         ?string $element_type = null,
         ?int $max_capacity = null,
         ?int $dim = null,
@@ -63,7 +70,7 @@ class CollectionSchema implements \JsonSerializable
 
 
         if ($datatype === DataType::INT64 || $datatype === DataType::VARCHAR) {
-            return $this->addScalarField($field_name, $datatype, $max_lenght);
+            return $this->addScalarField($field_name, $datatype, $max_length); // corrected 'max_lenght' to 'max_length'
         }
     }
 

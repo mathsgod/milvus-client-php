@@ -28,6 +28,20 @@ class Collections
         ]);
     }
 
+    /**
+     * Alter collection properties.
+     * Example for properties:
+     * [
+     *     CollectionProperty::MMAP_ENABLED => true,
+     *     CollectionProperty::COLLECTION_TTL_SECONDS => 60,
+     *     CollectionProperty::PARTITIONKEY_ISOLATION => true,
+     * ]
+     * You can set any supported property key-value pairs here.
+     *
+     * @param string $collectionName
+     * @param array $properties Associative array of property keys and values.
+     * @see \Milvus\CollectionProperty
+     */
     public function alterProperties(string $collectionName, array $properties)
     {
         return $this->client->post("/v2/vectordb/collections/alter_properties", [
@@ -94,6 +108,9 @@ class Collections
         ]);
     }
 
+    /**
+     * This operation drops the current collection and all data within the collection.
+     */
     public function drop(string $collectionName)
     {
         return $this->client->post("/v2/vectordb/collections/drop", [
@@ -104,6 +121,9 @@ class Collections
         ]);
     }
 
+    /**
+     * This operation drops the properties of a collection.
+     */
     public function dropProperties(string $collectionName, array $propertyKeys)
     {
         return $this->client->post("/v2/vectordb/collections/drop_properties", [

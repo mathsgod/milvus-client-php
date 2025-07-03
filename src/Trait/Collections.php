@@ -93,7 +93,7 @@ trait Collections
      */
     public function create_schema(bool $auto_id = false, bool $enable_dynamic_field = false)
     {
-        return new CollectionSchema($auto_id, $enable_dynamic_field);
+        return new CollectionSchema([], "", $auto_id, $enable_dynamic_field);
     }
 
 
