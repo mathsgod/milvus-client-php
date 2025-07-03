@@ -37,9 +37,9 @@ class Client
     public function hybridSearch(
         string $collection_name,
         array $reqs,
-        array $ranker,
-        int $limit,
-        array $outputFields = []
+        ?array $ranker = null,
+        ?int $limit = null,
+        ?array $outputFields = []
     ) {
         return (new Entities($this))->hybridSearch(
             $collection_name,
