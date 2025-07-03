@@ -16,7 +16,7 @@ class FieldSchema extends \JsonSerializable
         protected ?int $dim  = null,
     ) {}
 
-    public function toArray(): array
+    public function jsonSerialize(): mixed
     {
         $field = [
             'name' => $this->name,
