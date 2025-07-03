@@ -66,26 +66,20 @@ class Collections
 
     public function create(
         string $collectionName,
-        int $dimension,
-        string $metricType,
-        string $idType,
-        string $primaryFieldName = "id",
-        string $vectorFieldName = "vector",
-        bool $autoID = false,
+        ?int $dimension = null,
+        ?string $metricType = null,
+        ?string $idType = null,
+        ?string $primaryFieldName = "id",
+        ?string $vectorFieldName = "vector",
+        ?bool $autoID = false,
         ?CollectionSchema $schema = null,
         ?IndexParams $indexParams = null,
         ?bool $enableDynamicField = false
     ) {
         $data = ["collectionName" => $collectionName];
-        if ($schema) {
-            $data['schema'] = $schema;
-        }
-        if ($indexParams) {
-            $data['indexParams'] = $indexParams;
-        }
-        if ($enableDynamicField !== null) {
-            $data['enable_dynamic_field'] = $enableDynamicField;
-        }
+        $data['schema'] = $schema;
+        $data['indexParams'] = $indexParams;
+        $data['enable_dynamic_field'] = $enableDynamicField;
         $data['dimension'] = $dimension;
         $data['primaryFieldName'] = $primaryFieldName;
         $data['vectorFieldName'] = $vectorFieldName;
@@ -93,8 +87,11 @@ class Collections
         $data['idType'] = $idType;
         $data['autoID'] = $autoID;
 
+        
+
+        
         return $this->client->post("/v2/vectordb/collections/create", [
-            "json" => $data,
+            "json" => array_filter($data, fn($value) => $value !== null)
         ]);
     }
 

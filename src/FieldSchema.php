@@ -2,7 +2,7 @@
 
 namespace Milvus;
 
-class FieldSchema extends \JsonSerializable
+class FieldSchema implements \JsonSerializable
 {
 
     public function __construct(
@@ -19,8 +19,8 @@ class FieldSchema extends \JsonSerializable
     public function jsonSerialize(): mixed
     {
         $field = [
-            'name' => $this->name,
-            'type' => $this->dtype,
+            'fieldName' => $this->name,
+            'dataType' => $this->dtype,
         ];
 
         if ($this->description !== null) {
@@ -36,10 +36,14 @@ class FieldSchema extends \JsonSerializable
             $field['isPartitionKey'] = $this->is_partition_key;
         }
         if ($this->max_length !== null) {
-            $field['maxLength'] = $this->max_length;
+            $field["elementTypeParams"] = [
+                "max_length" => $this->max_length
+            ];
         }
         if ($this->dim !== null) {
-            $field['dim'] = $this->dim;
+            $field["elementTypeParams"] = [
+                "dim" => $this->dim
+            ];
         }
 
         return $field;

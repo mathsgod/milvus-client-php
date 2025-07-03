@@ -63,28 +63,29 @@ trait Collections
      */
     public function create_collection(
         string $collection_name,
+        ?string $primary_field_name = "id",
+        ?string $vector_field_name = "vector",
+        ?string $metric_type = MetricType::COSINE,
+        ?bool $auto_id = null,
+        ?string $id_type = null,
         ?int $dimension = 0,
-        string $primary_field_name = "id",
-        string $vector_field_name = "vector",
-        string $metric_type = MetricType::COSINE,
-        bool $auto_id = false,
-        ?float $timeout = null,
         ?CollectionSchema $schema = null,
         ?IndexParams $index_params = null,
-        ?bool $enable_dynamic_field = false
+        ?bool $enable_dynamic_field = null,
+        ?float $timeout = null,
     ) {
         /** @var \Milvus\Client $this */
         return $this->collections()->create(
-            $collection_name,
-            $dimension,
-            $primary_field_name,
-            $vector_field_name,
-            $metric_type,
-            $auto_id,
-            $timeout,
-            $schema,
-            $index_params,
-            $enable_dynamic_field
+            collectionName: $collection_name,
+            dimension: $dimension,
+            idType: $id_type,
+            primaryFieldName: $primary_field_name,
+            vectorFieldName: $vector_field_name,
+            metricType: $metric_type,
+            autoID: $auto_id,
+            schema: $schema,
+            indexParams: $index_params,
+            enableDynamicField: $enable_dynamic_field
         );
     }
 

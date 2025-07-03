@@ -28,7 +28,7 @@ class CollectionTest extends TestCase
 
         $this->client->create_collection(
             collection_name: $collectionName,
-            schema: $schema
+            schema: $schema,
         );
 
         // 應該能在列表中找到

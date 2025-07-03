@@ -4,24 +4,13 @@ namespace Milvus;
 
 class CollectionSchema implements \JsonSerializable
 {
-    private $fields = [];
-    private bool $auto_id;
-    private bool $enable_dynamic_field;
-    private string $description;
 
     public function __construct(
-        array $fields = [],
-        string $description,
-        bool $auto_id = false,
-        bool $enable_dynamic_field = false
-    ) {
-        $this->fields = $fields;
-        $this->description = $description;
-        $this->auto_id = $auto_id;
-        $this->enable_dynamic_field = $enable_dynamic_field;
-
-        $this->fields = [];
-    }
+        private array $fields = [],
+        private string $description = "",
+        private bool $auto_id = false,
+        private bool $enable_dynamic_field = false
+    ) {}
 
     public function jsonSerialize(): mixed
     {
@@ -29,7 +18,7 @@ class CollectionSchema implements \JsonSerializable
             'autoID' => $this->auto_id,
             "enabledDynamicField" => $this->enable_dynamic_field,
             'fields' => array_map(function ($field) {
-                return $field->toArray();
+                return $field->jsonSerialize();
             }, $this->fields)
         ];
     }
