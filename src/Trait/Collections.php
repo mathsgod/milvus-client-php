@@ -8,6 +8,14 @@ use Milvus\MetricType;
 
 trait Collections
 {
+
+
+    public function load_collection(string $collection_name)
+    {
+        return $this->collections()->load($collection_name);
+    }
+
+
     /**
      * This operation reassigns the alias of one collection to another.
      */

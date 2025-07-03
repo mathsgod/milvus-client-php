@@ -9,6 +9,7 @@ class Client
     use Trait\Vector;
     use Trait\Management;
     use Trait\Database;
+    use Trait\Partitions;
 
     private $client;
     private $dbName = "default";
@@ -54,12 +55,10 @@ class Client
     //--- END OF DATABASES ---
 
 
-    protected function aliases()
+    public function aliases()
     {
         return new Aliases($this);
     }
-
-
 
     public function collections()
     {
@@ -76,14 +75,10 @@ class Client
         return new Entities($this);
     }
 
-    public function loadCollection(string $collection_name)
-    {
-        return $this->collections()->load($collection_name);
-    }
 
-    public function partitions(string $collectionName)
+    public function partitions()
     {
-        return new Partitions($this, $collectionName);
+        return new Partitions($this);
     }
 
     public function post($uri, array $options = []): array
@@ -103,10 +98,7 @@ class Client
         return new IndexParams();
     }
 
-  
-
-
-    public  function roles()
+    public function roles()
     {
         return new Roles($this);
     }
@@ -115,5 +107,4 @@ class Client
     {
         return new Users($this);
     }
-
 }
