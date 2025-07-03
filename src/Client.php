@@ -7,6 +7,8 @@ class Client
     use Trait\Authentication;
     use Trait\Collections;
     use Trait\Vector;
+    use Trait\Management;
+    use Trait\Database;
 
     private $client;
     private $dbName = "default";
@@ -86,21 +88,15 @@ class Client
         return new Collections($this);
     }
 
-
     public function databases()
     {
         return new Databases($this);
     }
 
-
-
     public function entities()
     {
         return new Entities($this);
     }
-
- 
-
 
     public function loadCollection(string $collection_name)
     {
@@ -129,11 +125,7 @@ class Client
         return new IndexParams();
     }
 
-    public function releaseCollection(string $collection_name)
-    {
-        return $this->collections()->release($collection_name);
-    }
-
+  
     public function renameCollection(string $old_name, string $new_name)
     {
         return $this->collections()->rename($old_name, $new_name);
@@ -149,16 +141,4 @@ class Client
         return new Users($this);
     }
 
-
-    //--- Start of Management ---
-
-    public function createIndex(string $collection_name, IndexParams $index_params)
-    {
-        (new Indexes($this))->create($collection_name, $index_params);
-    }
-
-    public function listIndexes(string $collection_name): array
-    {
-        return (new Indexes($this))->list($collection_name);
-    }
 }
