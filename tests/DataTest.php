@@ -15,24 +15,24 @@ class DataTest extends TestCase
         self::$client = new Client();
         // 刪除舊的 collection（如果存在）
         try {
-            self::$client->dropCollection(self::$collectionName);
+            self::$client->drop_collection(self::$collectionName);
         } catch (\Exception $e) {
             // 忽略不存在的錯誤
         }
 
         // 建立 schema
-        $schema = self::$client->createSchema();
+        $schema = self::$client->create_schema();
         $schema->addField(field_name: "id", datatype: DataType::INT64, is_primary: true);
         $schema->addField(field_name: "vector", datatype: DataType::FLOAT_VECTOR, dim: 2);
 
 
         //create index params
-        $indexParams = self::$client->prepareIndexParams();
+        $indexParams = self::$client->prepare_index_params();
         $indexParams->addIndex(field_name: "vector", index_name: "my_index", index_type: Milvus\IndexType::AUTOINDEX, metric_type: Milvus\MetricType::COSINE);
 
 
         // 建立 collection
-        self::$client->createCollection(
+        self::$client->create_collection(
             collection_name: self::$collectionName,
             schema: $schema,
             index_params: $indexParams

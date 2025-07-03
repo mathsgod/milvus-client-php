@@ -10,7 +10,7 @@ class DatabaseTest extends TestCase
         // Assuming you have a MilvusClient class with a listDatabase method
         $client = new Milvus\Client();
 
-        $databases = $client->listDatabases();
+        $databases = $client->list_databases();
 
         $this->assertIsArray($databases, 'listDatabase should return an array');
         // Optionally, check for expected database names
