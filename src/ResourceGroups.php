@@ -2,7 +2,7 @@
 
 namespace Milvus;
 
-class ResourceGroup
+class ResourceGroups
 {
     private $client;
 

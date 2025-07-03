@@ -11,6 +11,59 @@ class Users
         $this->client = $client;
     }
 
+    /**
+     * This operation creates a new user with a corresponding password.
+     */
+    public function create(string $userName, string $password)
+    {
+        return $this->client->post("/v2/vectordb/users/create", [
+            "json" => [
+                "userName" => $userName,
+                "password" => $password,
+            ],
+        ]);
+    }
+
+    /**
+     * This operation describes the detailed information of a specific user.
+     */
+    public function describe(string $userName)
+    {
+        return $this->client->post("/v2/vectordb/users/describe", [
+            "json" => [
+                "userName" => $userName,
+            ],
+        ]);
+    }
+
+    /**
+     * This operation deletes an existing user.
+     */
+    public function drop(string $userName)
+    {
+        return $this->client->post("/v2/vectordb/users/drop", [
+            "json" => [
+                "userName" => $userName,
+            ],
+        ]);
+    }
+
+    /**
+     * This operation grants a specified role to the current user. Once granted the role, the user gets permissions allowed for the current role and can perform certain operations.To complete this operation, you need to enable authentication on your Milvus instance.
+     */
+    public function grantRole(string $userName, string $roleName)
+    {
+        return $this->client->post("/v2/vectordb/users/grant_role", [
+            "json" => [
+                "userName" => $userName,
+                "roleName" => $roleName,
+            ],
+        ]);
+    }
+
+    /**
+     * This operation lists the information of all existing users.
+     */
     public function list()
     {
         return $this->client->post("/v2/vectordb/users/list", [
@@ -18,62 +71,30 @@ class Users
         ]);
     }
 
-    public function create(string $user_name, string $password)
-    {
-        return $this->client->post("/v2/vectordb/users/create", [
-            "body" => json_encode([
-                "userName" => $user_name,
-                "password" => $password,
-            ]),
-        ]);
-    }
-
-    public function describe(string $user_name)
-    {
-        return $this->client->post("/v2/vectordb/users/describe", [
-            "body" => json_encode([
-                "userName" => $user_name,
-            ]),
-        ]);
-    }
-
-    public function drop(string $user_name)
-    {
-        return $this->client->post("/v2/vectordb/users/drop", [
-            "body" => json_encode([
-                "userName" => $user_name,
-            ]),
-        ]);
-    }
-
-    public function grantRole(string $user_name, string $role_name)
-    {
-        return $this->client->post("/v2/vectordb/users/grant_role", [
-            "body" => json_encode([
-                "userName" => $user_name,
-                "roleName" => $role_name,
-            ]),
-        ]);
-    }
-
-    public function revokeRole(string $user_name, string $role_name)
+    /**
+     * This operation revokes a privilege granted to the current role.
+     */
+    public function revokeRole(string $userName, string $roleName)
     {
         return $this->client->post("/v2/vectordb/users/revoke_role", [
-            "body" => json_encode([
-                "userName" => $user_name,
-                "roleName" => $role_name,
-            ]),
+            "json" => [
+                "userName" => $userName,
+                "roleName" => $roleName,
+            ],
         ]);
     }
 
-    public function updatePassword(string $user_name, string $password, string $new_password)
+    /**
+     * This operation updates the password for a specific user.
+     */
+    public function updatePassword(string $userName, string $password, string $newPassword)
     {
         return $this->client->post("/v2/vectordb/users/update_password", [
-            "body" => json_encode([
-                "userName" => $user_name,
+            "json" => [
+                "userName" => $userName,
                 "password" => $password,
-                "newPassword" => $new_password,
-            ]),
+                "newPassword" => $newPassword,
+            ],
         ]);
     }
 }
