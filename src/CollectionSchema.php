@@ -2,17 +2,13 @@
 
 namespace Milvus;
 
-use Milvus\Field\PrimaryField;
-use Milvus\Field\VectorField;
-use Milvus\Field\ScalarField;
-
 class CollectionSchema implements \JsonSerializable
 {
     private $fields = [];
     private bool $auto_id;
     private bool $enable_dynamic_field;
     private string $description;
-    
+
     public function __construct(
         array $fields = [],
         string $description,
@@ -58,41 +54,49 @@ class CollectionSchema implements \JsonSerializable
     ) {
 
         if ($is_primary) {
-            return $this->addPrimaryField($field_name, $datatype);
+
+            $this->fields[] = new FieldSchema(
+                $field_name,
+                $datatype,
+                null, // description
+                true, // is_primary
+                $this->auto_id, // auto_id
+                $is_partition_key, // is_partition_key
+                $max_length, // max_length
+                $dim // dim
+            );
+            return $this;
         }
 
         if ($datatype == DataType::INT8_VECTOR || $datatype == DataType::FLOAT_VECTOR) {
             if ($dim === null) {
                 throw new \InvalidArgumentException('Dimension must be specified for vector fields.');
             }
-            return $this->addVectorField($field_name, $datatype, $dim);
-        }
 
+            $this->fields[] = new FieldSchema(
+                $field_name,
+                $datatype,
+                null, // description
+                false, // is_primary
+                $this->auto_id, // auto_id
+                $is_partition_key, // is_partition_key
+                $max_length, // max_length
+                $dim // dim
+            );
+        }
 
         if ($datatype === DataType::INT64 || $datatype === DataType::VARCHAR) {
-            return $this->addScalarField($field_name, $datatype, $max_length); // corrected 'max_lenght' to 'max_length'
+
+            $this->fields[] = new FieldSchema(
+                $field_name,
+                $datatype,
+                null, // description
+                false, // is_primary
+                $this->auto_id, // auto_id
+                $is_partition_key, // is_partition_key
+                $max_length, // max_length
+                null // dim
+            );
         }
-    }
-
-    private function addPrimaryField(string $fieldName, string $dataType, ?string $description = null)
-    {
-        // 僅允許 Int64 或 VarChar
-        if ($dataType !== 'Int64' && $dataType !== 'VarChar') {
-            throw new \InvalidArgumentException('Primary field only supports Int64 or VarChar types.');
-        }
-        $this->fields[] = new PrimaryField($fieldName, $dataType, $description);
-        return $this;
-    }
-
-    private function addVectorField(string $fieldName, string $dataType, int $dimension, ?string $description = null)
-    {
-        $this->fields[] = new VectorField($fieldName, $dataType, $dimension, $description);
-        return $this;
-    }
-
-    private function addScalarField(string $fieldName, string $dataType, int $max_length = 0, ?string $description = null)
-    {
-        $this->fields[] = new ScalarField($fieldName, $dataType, $max_length, $description);
-        return $this;
     }
 }

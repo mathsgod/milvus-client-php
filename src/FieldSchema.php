@@ -2,7 +2,7 @@
 
 namespace Milvus;
 
-class FieldSchema
+class FieldSchema extends \JsonSerializable
 {
 
     public function __construct(
@@ -15,4 +15,33 @@ class FieldSchema
         protected ?int $max_length  = null,
         protected ?int $dim  = null,
     ) {}
+
+    public function toArray(): array
+    {
+        $field = [
+            'name' => $this->name,
+            'type' => $this->dtype,
+        ];
+
+        if ($this->description !== null) {
+            $field['description'] = $this->description;
+        }
+        if ($this->is_primary !== null) {
+            $field['isPrimary'] = $this->is_primary;
+        }
+        if ($this->auto_id !== null) {
+            $field['autoID'] = $this->auto_id;
+        }
+        if ($this->is_partition_key !== null) {
+            $field['isPartitionKey'] = $this->is_partition_key;
+        }
+        if ($this->max_length !== null) {
+            $field['maxLength'] = $this->max_length;
+        }
+        if ($this->dim !== null) {
+            $field['dim'] = $this->dim;
+        }
+
+        return $field;
+    }
 }
