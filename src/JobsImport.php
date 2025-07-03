@@ -2,7 +2,7 @@
 
 namespace Milvus;
 
-class Job
+class JobsImport
 {
 
     private $client;
@@ -15,11 +15,11 @@ class Job
     /**
      * Create an import job to import data files into a Milvus collection.
      */
-    public function createImportJob(
+    public function create(
         string $collectionName,
         ?string $partitionName = null,
         array $files,
-        array $options = [],
+        ?array $options = null
     ): array {
 
         return $this->client->post('/v2/vectordb/jobs/import/create', [
@@ -35,7 +35,7 @@ class Job
     /**
      * This operation gets the progress of the specified bulk-import job.
      */
-    public function describeImportJob(string $jobId): array
+    public function describe(string $jobId): array
     {
         return $this->client->post('/v2/vectordb/jobs/import/describe', [
             'json' => [
