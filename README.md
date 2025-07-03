@@ -1,93 +1,271 @@
 # milvus-client-php
 
-A PHP client for [Milvus](https://milvus.io/). This library only supports Milvus 2.x.
+A PHP client for [Milvus](https://milvus.io/) 2.x.
 
-## Setup
+## Installation
 
-```
+```bash
 composer require mathsgod/milvus-client-php
 ```
 
+## Quick Start
 
-## Usage
+### Initialize Client
 
-### Create a Collection
 ```php
-$client=new Milvus\Client($host, $port);
+use Milvus\Client;
 
-// Create a collection with 5 dimensions
-$client->collections()->create("test_collection",5);
-
+$client = new Client(
+    "http://localhost:19530", // Milvus server URI
+    "username",               // Optional: username
+    "password",               // Optional: password
+    "default",                // Optional: database name
+    "token"                   // Optional: JWT token
+);
 ```
 
-### Insert Vectors
+---
+
+## Database Operations
+
+### Create Database
+
 ```php
-$collection = $client->entities("test_collection");
-$collection->insert([
-    [ "id"=>1, "vector" => [1.0, 2.0, 3.0, 4.0, 5.0] ],
-    [ "id"=>2, "vector" => [2.0, 2.0, 3.0, 4.0, 5.0] ],
-    [ "id"=>3, "vector" => [3.0, 2.0, 3.0, 4.0, 5.0] ],
-    [ "id"=>4, "vector" => [4.0, 2.0, 3.0, 4.0, 5.0] ],
-    [ "id"=>5, "vector" => [5.0, 2.0, 3.0, 4.0, 5.0] ],
-]);
+$client->createDatabase("my_db");
 ```
 
-### Load Collection
+### Switch Database
+
 ```php
-$collection = $client->collection("test_collection");
-$collection->load();
+$client->usingDatabase("my_db");
+```
+
+### List All Databases
+
+```php
+$dbs = $client->listDatabases();
+```
+
+### Describe Database
+
+```php
+$info = $client->describeDatabase("my_db");
+```
+
+### Drop Database
+
+```php
+$client->dropDatabase("my_db");
+```
+
+---
+
+## Collection Operations
+
+### Create Collection
+
+```php
+$schema = $client->createSchema();
+$schema->addField("id", Milvus\DataType::INT64, true);
+$schema->addField("vector", Milvus\DataType::FLOAT_VECTOR, false, 5);
+
+$client->createCollection(
+    "test_collection",
+    5,
+    "id",
+    "vector",
+    "COSINE",
+    false,
+    null,
+    $schema
+);
+```
+
+### List All Collections
+
+```php
+$collections = $client->listCollections();
+```
+
+### Describe Collection
+
+```php
+$desc = $client->describeCollection("test_collection");
+```
+
+### Drop Collection
+
+```php
+$client->dropCollection("test_collection");
+```
+
+### Load/Release Collection
+
+```php
+$client->loadCollection("test_collection");
+$client->releaseCollection("test_collection");
+```
+
+### Rename Collection
+
+```php
+$client->renameCollection("old_name", "new_name");
+```
+
+---
+
+## Vector Data Operations
+
+### Insert Data
+
+```php
+$entities = [
+    ["id" => 1, "vector" => [1.0, 2.0, 3.0, 4.0, 5.0]],
+    ["id" => 2, "vector" => [2.0, 2.0, 3.0, 4.0, 5.0]],
+];
+$client->insert("test_collection", $entities);
+```
+
+### Upsert Data
+
+```php
+$client->upsert("test_collection", $entities);
+```
+
+### Query Data
+
+```php
+$result = $client->query("test_collection", "id in [1,2]");
+```
+
+### Delete Data
+
+```php
+$client->delete("test_collection", "id in [1]");
 ```
 
 ### Search Vectors
+
 ```php
-// Search for the top 10 vectors that are most similar to the vector [1.0,3.0,3.0,4.0,5.0]
-$result = $client->entities("test_collection")->search("vector",[1.0,3.0,3.0,4.0,5.0],10);
+$result = $client->search(
+    "test_collection",
+    "vector",
+    [[1.0, 2.0, 3.0, 4.0, 5.0]],
+    10
+);
 ```
 
-### Query Entities
+---
+
+## Index Operations
+
+### Create Index
+
 ```php
-$e = $client->entities("test_collection");
-$result = $e->query("id in [1,2,3,4,5]");
+$indexParams = $client->prepareIndexParams();
+$indexParams->addIndex(
+    field_name: "vector",
+    index_name: "my_index",
+    index_type: Milvus\IndexType::AUTOINDEX,
+    metric_type: Milvus\MetricType::COSINE
+);
+$client->createIndex("test_collection", $indexParams);
 ```
 
-### Delete Entities
+### List Indexes
+
 ```php
-$e = $client->entities("test_collection");
-$e->delete("id in [1]");
+$indexes = $client->listIndexes("test_collection");
 ```
 
+---
 
-## Users
+## Users & Privileges
 
 ### List Users
+
 ```php
-$users = $client->users()->list();
+$users = $client->listUsers();
 ```
 
-### Create a User
+### Create User
+
 ```php
-$client->users()->create("test_user");
+$client->createUser("test_user", "password");
 ```
 
-### Delete a User
+### Describe User
+
 ```php
-$client->user("test_user")->drop();
+$userInfo = $client->describeUser("test_user");
 ```
 
-### Grant role
+### Drop User
+
 ```php
-$client->user("test_user")->grantRole("admin");
+$client->dropUser("test_user");
 ```
 
-### Revoke role
+### Update Password
+
 ```php
-$client->user("test_user")->revokeRole("admin");
+$client->updatePassword("test_user", "old_password", "new_password");
 ```
 
-## Roles
+---
 
-### List roles
+## Roles & Privileges
+
+### List Roles
+
 ```php
-$roles = $client->roles()->list();
+$roles = $client->listRoles();
 ```
+
+### Create Role
+
+```php
+$client->createRole("admin");
+```
+
+### Describe Role
+
+```php
+$roleInfo = $client->describeRole("admin");
+```
+
+### Drop Role
+
+```php
+$client->dropRole("admin");
+```
+
+### Grant Privilege to Role
+
+```php
+$client->grantPrivilege("admin", "Collection", "Insert", "test_collection");
+```
+
+---
+
+## Others
+
+### Hybrid Search
+
+```php
+$result = $client->hybridSearch(
+    "test_collection",
+    $reqs,      // search conditions
+    $ranker,    // ranking rules
+    10,         // limit
+    ["id", "vector"] // output fields
+);
+```
+
+---
+
+## Reference
+
+- [Milvus Documentation](https://milvus.io/docs)
+- [mathsgod/milvus-client-php on GitHub](https://github.com/mathsgod/milvus-client-php)
 

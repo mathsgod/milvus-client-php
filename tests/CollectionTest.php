@@ -99,7 +99,7 @@ class CollectionTest extends TestCase
         );
 
         // 執行 rename
-        $this->client->collections()->rename($originalName, $newName);
+        $this->client->renameCollection($originalName, $newName);
 
         // 新名稱應存在，舊名稱應不存在
         $collections = $this->client->listCollections();
@@ -109,5 +109,4 @@ class CollectionTest extends TestCase
         // 清理
         $this->client->dropCollection($newName);
     }
-
 }
