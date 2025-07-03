@@ -38,7 +38,7 @@ class Entities
      * @param array $outputFields An array of fields to return along with the query results.
      * @param string $partitionNames The name of the partitions to which this operation applies.
      */
-    public function get(string $collectionName, $id, array $outputFields, string $partitionNames)
+    public function get(string $collectionName, $id, array $outputFields, ?string $partitionNames = null)
     {
         return  $this->client->post('/v2/vectordb/entities/get', [
             'json' => [
