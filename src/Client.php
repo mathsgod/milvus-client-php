@@ -59,29 +59,7 @@ class Client
         return new Aliases($this);
     }
 
-    public function alterAlias(string $collection_name, string $alias)
-    {
-        $this->aliases()->alter($collection_name, $alias);
-    }
 
-    public function alterCollectionField(
-        string $collection_name,
-        string $field_name,
-        array $field_params,
-        string $db_name = ""
-    ) {
-        return $this->collections()->alterFieldProperties(
-            $collection_name,
-            $field_name,
-            $field_params,
-            $db_name,
-        );
-    }
-
-    public function alterCollectionProperties(string $collection_name, array $properties)
-    {
-        return $this->collections()->alterProperties($collection_name, $properties);
-    }
 
     public function collections()
     {
@@ -126,10 +104,7 @@ class Client
     }
 
   
-    public function renameCollection(string $old_name, string $new_name)
-    {
-        return $this->collections()->rename($old_name, $new_name);
-    }
+
 
     public  function roles()
     {
