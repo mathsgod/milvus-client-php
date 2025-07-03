@@ -22,6 +22,10 @@ class Client
             $headers["Authorization"] = "Bearer " . $token;
         }
 
+        if ($user && $password) {
+            $headers["Authorization"] = "Bearer $user:$password";
+        }
+
         if ($db_name) {
             $this->dbName = $db_name;
         }
