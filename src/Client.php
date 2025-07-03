@@ -211,9 +211,6 @@ class Client
         );
     }
 
-
-
-
     public function createSchema(bool $auto_id = false, bool $enable_dynamic_field = false)
     {
         return new CollectionSchema($auto_id, $enable_dynamic_field);
@@ -229,7 +226,12 @@ class Client
         ?string $filter = null,
         ?array $ids = null
     ) {
-        return (new Entities($this))->delete($collection_name, $filter, $ids);
+
+        if ($ids !== null) {
+            $filter = "id in [" . implode(',', $ids) . "]";
+        }
+
+        return (new Entities($this))->delete($collection_name, $filter);
     }
 
     public function describeAlias(string $alias): array

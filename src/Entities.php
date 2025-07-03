@@ -14,6 +14,24 @@ class Entities
         $this->client = $client;
     }
 
+    /**
+     * This operation deletes entities by their IDs or with a boolean expression.
+     * @param string $collection_name The name of an existing collection.
+     * @param string $filter A scalar filtering condition to filter matching entities. You can set this parameter to an empty string to skip scalar filtering. To build a scalar filtering condition, refer to Boolean Expression Rules.
+     * @param string|null The name of a partition in the current collection. If specified, the data is to be deleted from the specified partition.
+     */
+    public function delete(string $collection_name, string $filter, ?string $partition_name = null)
+    {
+
+        return $this->client->post('/v2/vectordb/entities/delete', [
+            'json' => [
+                'collectionName' => $collection_name,
+                'filter' => $filter,
+                'partitionName' => $partition_name
+            ]
+        ]);
+    }
+
     public function hybridSearch(string $collection_name, array $search, array $rerank, int $limit, array $outputFields = [])
     {
         return $this->client->post('/v2/vectordb/entities/hybrid_search', [
@@ -82,24 +100,7 @@ class Entities
         ]);
     }
 
-    public function delete(string $collection_name, ?string $filter = null, ?array $ids = null, ?string $partition_name = null)
-    {
-        if ($filter === null && $ids === null) {
-            throw new Exception("Either filter or ids must be provided for deletion.");
-        }
 
-        if ($ids !== null) {
-            $filter = "id in [" . implode(',', $ids) . "]";
-        }
-
-        return $this->client->post('/v2/vectordb/entities/delete', [
-            'json' => [
-                'collectionName' => $collection_name,
-                'filter' => $filter,
-                'partitionName' => $partition_name
-            ]
-        ]);
-    }
 
     public function upsert(string $collection_name, array $data)
     {
