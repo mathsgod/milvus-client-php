@@ -17,7 +17,7 @@ class DataType
     const FLOAT_VECTOR = 'FloatVector';
     const BFLOAT16_VECTOR = 'BFloat16Vector';
     const INT8_VECTOR = 'Int8Vector';
-    const BINARY_VECTOR = 'BINARY_VECTOR';
+    const BINARY_VECTOR = 'BinaryVector';
     const SPARSE_FLOAT_VECTOR = 'SparseFloatVector';
 
 

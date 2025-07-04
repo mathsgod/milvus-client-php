@@ -25,12 +25,6 @@ class CollectionSchema implements \JsonSerializable
         return array_filter($data, fn($value) => $value !== null);
     }
 
-    public function getFields()
-    {
-        return $this->fields;
-    }
-
-
     public function addField(
         string $field_name, //The name of the field.
         string $datatype, //The data type of the field.
@@ -56,13 +50,11 @@ class CollectionSchema implements \JsonSerializable
             "dataType" => $datatype,
             "autoId" => false,
             "elementDataType" => $element_type,
+            "nullable" => $nullable,
+            "isPrimary" => $is_primary,
+            "isPartitionKey" => $is_partition_key,
+            "isClusteringKey" => $is_clustering_key,
         ];
-
-        if ($is_primary !== null) {
-            $field["isPrimary"] = $is_primary;
-        }
-
-
 
         if ($dim !== null) {
             $field["elementTypeParams"] = [
