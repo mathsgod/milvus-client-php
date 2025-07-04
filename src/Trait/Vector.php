@@ -2,6 +2,7 @@
 
 namespace Milvus\Trait;
 
+use JsonSerializable;
 use Milvus\Entities;
 
 trait Vector
@@ -12,7 +13,7 @@ trait Vector
     public function hybridSearch(
         string $collection_name,
         array $reqs,
-        ?array $ranker = null,
+        $ranker,
         ?int $limit = null,
         ?array $outputFields = []
     ) {
@@ -82,13 +83,15 @@ trait Vector
         int $limit = 10,
         ?array $output_fields = null,
         ?array $search_params = null,
-        ?string $anns_field = null,
+        ?string $anns_field = "vector",
         ?array $partition_names = null,
 
     ) {
         return (new Entities($this))->search(
             collectionName: $collection_name,
             data: $data,
+            filter: $filter,
+            outputFields: $output_fields,
             annsField: $anns_field,
             limit: $limit,
             searchParams: $search_params,

@@ -3,6 +3,7 @@
 namespace Milvus;
 
 use Exception;
+use JsonSerializable;
 
 class Entities
 {
@@ -38,7 +39,7 @@ class Entities
      * @param array $outputFields An array of fields to return along with the query results.
      * @param string $partitionNames The name of the partitions to which this operation applies.
      */
-    public function get(string $collectionName, $id, array $outputFields, ?string $partitionNames = null)
+    public function get(string $collectionName, $id, ?array $outputFields = null, ?string $partitionNames = null)
     {
         return  $this->client->post('/v2/vectordb/entities/get', [
             'json' => [
@@ -56,7 +57,7 @@ class Entities
     public function hybridSearch(
         string $collectionName,
         array $search,
-        ?array $rerank,
+        array|JsonSerializable $rerank,
         ?int $limit,
         ?array $outputFields,
         ?string $partitionNames = null
