@@ -37,8 +37,8 @@ class CollectionTest extends TestCase
 
         // 建立 collection
         $schema = $this->client->createSchema();
-        $schema->add_field("id", DataType::INT64, true); // 主鍵
-        $schema->add_field(
+        $schema->addField("id", DataType::INT64, true); // 主鍵
+        $schema->addField(
             field_name: "vector",
             datatype: DataType::FLOAT_VECTOR,
             dim: 128
@@ -75,8 +75,8 @@ class CollectionTest extends TestCase
 
         // 建立 collection
         $schema = $this->client->createSchema();
-        $schema->add_field("id", DataType::INT64, true);
-        $schema->add_field(
+        $schema->addField("id", DataType::INT64, true);
+        $schema->addField(
             field_name: "vector",
             datatype: DataType::FLOAT_VECTOR,
             dim: 16
@@ -104,8 +104,8 @@ class CollectionTest extends TestCase
 
         // 建立 collection
         $schema = $this->client->createSchema();
-        $schema->add_field("id", DataType::INT64, true);
-        $schema->add_field(
+        $schema->addField("id", DataType::INT64, true);
+        $schema->addField(
             field_name: "vector",
             datatype: DataType::FLOAT_VECTOR,
             dim: 8

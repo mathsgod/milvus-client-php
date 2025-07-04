@@ -1,6 +1,6 @@
 # milvus-client-php
 
-A PHP client for [Milvus](https://milvus.io/) 2.5.x
+A PHP client for [Milvus](https://milvus.io/) 2.5.x.
 
 ## Installation
 
@@ -66,8 +66,8 @@ $client->dropDatabase("my_db");
 
 ```php
 $schema = $client->createSchema();
-$schema->addField("id", Milvus\DataType::INT64, true);
-$schema->addField("vector", Milvus\DataType::FLOAT_VECTOR, false, 5);
+$schema->add_field("id", Milvus\DataType::INT64, true);
+$schema->add_field("vector", Milvus\DataType::FLOAT_VECTOR, false, 5);
 
 $client->createCollection(
     "test_collection",
@@ -144,14 +144,15 @@ $result = $client->query("test_collection", "id in [1,2]");
 $client->delete("test_collection", "id in [1]");
 ```
 
-### Search Vectors
+### Vector Search
 
 ```php
 $result = $client->search(
     "test_collection",
-    "vector",
     [[1.0, 2.0, 3.0, 4.0, 5.0]],
-    10
+    "",
+    10,
+    ["id"]
 );
 ```
 
@@ -248,7 +249,7 @@ $client->grantPrivilege("admin", "Collection", "Insert", "test_collection");
 
 ---
 
-## Others
+## Advanced
 
 ### Hybrid Search
 

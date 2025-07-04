@@ -31,7 +31,7 @@ class CollectionSchema implements \JsonSerializable
     }
 
 
-    public function add_field(
+    public function addField(
         string $field_name,
         string $datatype,
         bool $is_primary = false,
