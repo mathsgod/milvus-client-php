@@ -60,7 +60,7 @@ class Entities
         array|JsonSerializable $rerank,
         ?int $limit,
         ?array $outputFields,
-        ?string $partitionNames = null
+        ?array $partitionNames = null
     ) {
         return $this->client->post('/v2/vectordb/entities/hybrid_search', [
             'json' => [
