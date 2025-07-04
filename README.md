@@ -78,6 +78,48 @@ print_R($client->search(
 ));
 ```
 
+#### Example Search Result
+
+```php
+Array
+(
+    [0] => Array
+        (
+            [distance] => 0.99999994
+            [id] => 1
+            [metadata] => {"key1":"value1","key2":"value2"}
+            [text] => Hello World
+            [vector] => Array
+                (
+                    [0] => 0.1
+                    [1] => 0.2
+                    [2] => 0.3
+                    [3] => 0.4
+                    [4] => 0.5
+                )
+
+        )
+
+    [1] => Array
+        (
+            [distance] => 0.96495044
+            [id] => 2
+            [metadata] =>
+            [text] =>
+            [vector] => Array
+                (
+                    [0] => 0.6
+                    [1] => 0.7
+                    [2] => 0.8
+                    [3] => 0.9
+                    [4] => 1
+                )
+
+        )
+
+)
+```
+
 ---
 
 ## Database Operations
