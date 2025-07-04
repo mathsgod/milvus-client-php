@@ -1,6 +1,6 @@
 # milvus-client-php
 
-A PHP client for [Milvus](https://milvus.io/) 2.x.
+A PHP client for [Milvus](https://milvus.io/) 2.5.x
 
 ## Installation
 

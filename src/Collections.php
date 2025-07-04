@@ -14,16 +14,42 @@ class Collections
         $this->client = $client;
     }
 
+    public function addField(
+        string $collectionName,
+        string $fieldName,
+        string $dataType,
+        ?int $dim = null,
+        ?bool $isPrimaryKey = false,
+        ?bool $autoID = false,
+        ?string $comment = null,
+        ?string $dbName = null
+    ) {
+        return $this->client->post("/v2/vectordb/collections/fields/add", [
+            "json" => [
+                "collectionName" => $collectionName,
+                "fieldName" => $fieldName,
+                "dataType" => $dataType,
+                "dim" => $dim,
+                "isPrimaryKey" => $isPrimaryKey,
+                "autoID" => $autoID,
+                "comment" => $comment,
+                "dbName" => $dbName
+            ],
+        ]);
+    }
+
     public function alterFieldProperties(
         string $collectionName,
         string $fieldName,
-        array $fieldParams
+        array $fieldParams,
+        ?string $dbName = null
     ) {
         return $this->client->post("/v2/vectordb/collections/fields/alter_properties", [
             "json" => [
                 "collectionName" => $collectionName,
                 "fieldName" => $fieldName,
                 "fieldParams" => $fieldParams,
+                "dbName" => $dbName,
             ],
         ]);
     }
@@ -87,9 +113,9 @@ class Collections
         $data['idType'] = $idType;
         $data['autoID'] = $autoID;
 
-        
 
-        
+
+
         return $this->client->post("/v2/vectordb/collections/create", [
             "json" => array_filter($data, fn($value) => $value !== null)
         ]);

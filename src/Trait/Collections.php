@@ -9,7 +9,6 @@ use Milvus\MetricType;
 trait Collections
 {
 
-
     public function loadCollection(string $collection_name)
     {
         return $this->collections()->load($collection_name);
@@ -31,9 +30,9 @@ trait Collections
         string $collection_name,
         string $field_name,
         array $field_params,
-        string $db_name = ""
+        ?string $db_name = null
     ) {
-        return $this->collections()->alterFieldProperties(
+        return (new \Milvus\Collections($this))->alterFieldProperties(
             $collection_name,
             $field_name,
             $field_params,
