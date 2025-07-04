@@ -26,6 +26,60 @@ $client = new Client(
 
 ---
 
+## Example: Create Collection with Various Field Types and Search
+
+```php
+$client = new Milvus\Client();
+
+$client->createCollection(
+    collection_name: "testing",
+    schema: $client->createSchema()
+        ->addField("id", Milvus\DataType::INT64, is_primary: true)
+        ->addField("array", Milvus\DataType::ARRAY, element_type: Milvus\DataType::INT64, max_capacity: 10)
+        ->addField("vector", Milvus\DataType::FLOAT_VECTOR, dim: 5)
+        ->addField("text", Milvus\DataType::VARCHAR, max_length: 1000, nullable: true)
+        ->addField("metadata", Milvus\DataType::JSON, nullable: true),
+    index_params: $client->prepareIndexParams()
+        ->addIndex(
+            field_name: "vector",
+            index_name: "my_index",
+            index_type: Milvus\IndexType::AUTOINDEX,
+            metric_type: Milvus\MetricType::COSINE
+        ),
+);
+
+// Insert data
+$client->insert(
+    collection_name: "testing",
+    data: [
+        [
+            "id" => 1,
+            "array" => [1, 2, 3],
+            "vector" => [0.1, 0.2, 0.3, 0.4, 0.5],
+            "text" => "Hello World",
+            "metadata" => ["key1" => "value1", "key2" => "value2"]
+        ],
+        [
+            "id" => 2,
+            "array" => [4, 5, 6],
+            "vector" => [0.6, 0.7, 0.8, 0.9, 1.0],
+            "text" => null,
+            "metadata" => null
+        ]
+    ]
+);
+
+print_R($client->search(
+    collection_name: "testing",
+    data: [[0.1, 0.2, 0.3, 0.4, 0.5]],
+    anns_field: "vector",
+    limit: 3,
+    output_fields: ["id", "vector", "text", "metadata"],
+));
+```
+
+---
+
 ## Database Operations
 
 ### Create Database
