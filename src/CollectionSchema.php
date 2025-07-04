@@ -37,6 +37,9 @@ class CollectionSchema implements \JsonSerializable
         ?bool $is_clustering_key = null,
         ?bool $mmap_enabled = null,
         ?bool $nullable = null,
+        ?bool $enable_analyzer = null,
+        ?bool $enable_match = null,
+        ?array $analyzer_params = null
     ) {
 
         if ($datatype == DataType::INT8_VECTOR || $datatype == DataType::FLOAT_VECTOR) {
@@ -56,22 +59,34 @@ class CollectionSchema implements \JsonSerializable
             "isClusteringKey" => $is_clustering_key,
         ];
 
+        $elementTypeParams = [];
+
         if ($dim !== null) {
-            $field["elementTypeParams"] = [
-                "dim" => $dim
-            ];
+            $elementTypeParams["dim"] = $dim;
         }
 
         if ($max_length !== null) {
-            $field["elementTypeParams"] = [
-                "max_length" => $max_length
-            ];
+            $elementTypeParams["max_length"] = $max_length;
         }
 
         if ($max_capacity !== null) {
-            $field["elementTypeParams"] = [
-                "max_capacity" => $max_capacity
-            ];
+            $elementTypeParams["max_capacity"] = $max_capacity;
+        }
+
+        if ($enable_analyzer !== null) {
+            $elementTypeParams["enable_analyzer"] = $enable_analyzer;
+        }
+
+        if ($enable_match !== null) {
+            $elementTypeParams["enable_match"] = $enable_match;
+        }
+
+        if ($analyzer_params !== null) {
+            $elementTypeParams["analyzer_params"] = $analyzer_params;
+        }
+
+        if (!empty($elementTypeParams)) {
+            $field["elementTypeParams"] = $elementTypeParams;
         }
 
         $this->fields[] = $field;

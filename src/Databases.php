@@ -24,7 +24,7 @@ class Databases
         ]);
     }
 
-    public function create(string $dbName, array $properties = [])
+    public function create(string $dbName, ?array $properties = null)
     {
         return $this->client->post("/v2/vectordb/databases/create", [
             "json" => [
