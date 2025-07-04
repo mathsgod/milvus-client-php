@@ -28,6 +28,7 @@ class IndexParams implements \JsonSerializable
         });
 
         $this->indexes[] = $index;
+        return $this;
     }
 
     public function jsonSerialize(): mixed

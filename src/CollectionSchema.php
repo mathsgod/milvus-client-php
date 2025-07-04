@@ -29,7 +29,7 @@ class CollectionSchema implements \JsonSerializable
         string $field_name, //The name of the field.
         string $datatype, //The data type of the field.
         ?bool $is_primary = null,
-        ?int $max_length = null, // corrected spelling from 'max_lenght' to 'max_length'
+        ?int $max_length = null,
         ?string $element_type = null,
         ?int $max_capacity = null,
         ?int $dim = null,

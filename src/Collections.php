@@ -116,7 +116,9 @@ class Collections
         $data['params'] = $params;
 
         $data = array_filter($data, fn($value) => $value !== null);
-        
+
+
+
 
         return $this->client->post("/v2/vectordb/collections/create", [
             "json" => $data

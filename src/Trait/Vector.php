@@ -85,6 +85,7 @@ trait Vector
         ?array $search_params = null,
         ?string $anns_field = "vector",
         ?array $partition_names = null,
+        ?string $consistency_level = null,
 
     ) {
         return (new Entities($this))->search(
@@ -96,6 +97,7 @@ trait Vector
             limit: $limit,
             searchParams: $search_params,
             partitionNames: $partition_names,
+            consistencyLevel: $consistency_level,
         );
     }
 
