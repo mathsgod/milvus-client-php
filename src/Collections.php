@@ -151,12 +151,12 @@ class Collections
     /**
      * This operation drops the properties of a collection.
      */
-    public function dropProperties(string $collectionName, array $propertyKeys)
+    public function dropProperties(string $collectionName, array $properties)
     {
         return $this->client->post("/v2/vectordb/collections/drop_properties", [
             "json" => [
                 "collectionName" => $collectionName,
-                "propertyKeys" => $propertyKeys
+                "properties" => $properties
             ],
         ]);
     }

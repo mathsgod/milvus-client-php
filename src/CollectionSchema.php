@@ -4,6 +4,7 @@ namespace Milvus;
 
 class CollectionSchema implements \JsonSerializable
 {
+    private $functions = [];
 
     public function __construct(
         private array $fields = [],
@@ -22,6 +23,11 @@ class CollectionSchema implements \JsonSerializable
             'fields' => $this->fields,
         ];
 
+        if ($this->functions) {
+            $data['functions'] = $this->functions;
+        }
+
+        //print_R($data);die;
         return array_filter($data, fn($value) => $value !== null);
     }
 
@@ -91,6 +97,21 @@ class CollectionSchema implements \JsonSerializable
 
         $this->fields[] = $field;
 
+
+        return $this;
+    }
+
+    public function addFunction(string $name, string $function_type, array $input_field_names, array $output_field_names)
+    {
+
+        $function = [
+            "name" => $name,
+            "type" => $function_type,
+            "inputFieldNames" => $input_field_names,
+            "outputFieldNames" => $output_field_names
+        ];
+
+        $this->functions[] = $function;
 
         return $this;
     }

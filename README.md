@@ -122,6 +122,85 @@ Array
 
 ---
 
+## Full-Text Search Example
+
+```php
+$client = new Milvus\Client();
+
+$client->dropCollection("testing2");
+
+// Full-Text Search
+
+$client->createCollection(
+    collection_name: "testing2",
+    schema: $client->createSchema()
+        ->addField("id", Milvus\DataType::INT64, is_primary: true)
+        ->addField("text_sparse", Milvus\DataType::SPARSE_FLOAT_VECTOR)
+        ->addField("document", Milvus\DataType::VARCHAR, max_length: 1000, enable_analyzer: true, enable_match: true)
+        ->addFunction(
+            name: "bm25",
+            function_type: Milvus\FunctionType::BM25,
+            input_field_names: ["document"],
+            output_field_names: ["text_sparse"]
+        ),
+    index_params: $client->prepareIndexParams()
+        ->addIndex(
+            field_name: "text_sparse",
+            index_name: "text_sparse_index",
+            index_type: Milvus\IndexType::SPARSE_INVERTED_INDEX,
+            metric_type: Milvus\MetricType::BM25
+        ),
+);
+
+// Insert data
+$client->insert(
+    collection_name: "testing2",
+    data: [
+        [
+            "id" => 1,
+            "document" => "This is a sample document for testing.",
+        ],
+        [
+            "id" => 2,
+            "document" => "Another document for testing purposes.",
+        ],
+        [
+            "id" => 3,
+            "document" => "Milvus is a vector database designed for scalable similarity search.",
+        ],
+        [
+            "id" => 4,
+            "document" => "Full-text search enables users to find relevant documents quickly.",
+        ],
+        [
+            "id" => 5,
+            "document" => "This document contains information about PHP and Milvus integration.",
+        ],
+        [
+            "id" => 6,
+            "document" => "Testing the search functionality with various sample documents.",
+        ],
+        [
+            "id" => 7,
+            "document" => "Another example document to increase the dataset size.",
+        ],
+        [
+            "id" => 8,
+            "document" => "Sample data helps in validating the search and indexing features.",
+        ]
+    ]
+);
+
+print_r($client->search(
+    collection_name: "testing2",
+    data: ['sample'],
+    anns_field: "text_sparse",
+    limit: 5
+));
+```
+
+---
+
 ## Database Operations
 
 ### Create Database
