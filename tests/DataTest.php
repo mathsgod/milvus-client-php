@@ -22,8 +22,8 @@ class DataTest extends TestCase
 
         // 建立 schema
         $schema = self::$client->createSchema();
-        $schema->add_field(field_name: "id", datatype: DataType::INT64, is_primary: true);
-        $schema->add_field(field_name: "vector", datatype: DataType::FLOAT_VECTOR, dim: 2);
+        $schema->addField(field_name: "id", datatype: DataType::INT64, is_primary: true);
+        $schema->addField(field_name: "vector", datatype: DataType::FLOAT_VECTOR, dim: 2);
 
 
         //create index params
