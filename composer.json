@@ -2,6 +2,12 @@
     "name": "mathsgod/milvus-client-php",
     "license": "MIT",
     "description": "A PHP client for Milvus",
+    "keywords": [
+        "milvus",
+        "php",
+        "client",
+        "vector database"
+    ],
     "authors": [
         {
             "name": "Raymond Chong",
