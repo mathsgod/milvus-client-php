@@ -62,8 +62,12 @@ class DataTest extends TestCase
     public function testSearchData()
     {
         $searchData = [[0.1, 0.2]];
-        $result = $this->getClient()->search(self::$collectionName, 'vector', $searchData, 1);
-
+        $result = $this->getClient()->search(
+            collection_name: self::$collectionName,
+            data: $searchData,
+            anns_field: 'vector',
+            limit: 1
+        );
         // Assert the search result is not empty
         $this->assertNotEmpty($result);
         $this->assertEquals(1, count($result));
@@ -77,6 +81,6 @@ class DataTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        self::$client->dropCollection(self::$collectionName);
+        self::$client->drop_collection(self::$collectionName);
     }
 }

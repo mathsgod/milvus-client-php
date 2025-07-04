@@ -83,7 +83,7 @@ class Entities
             'json' => [
                 'collectionName' => $collection_name,
                 'data' => $data,
-                'partitionName' => $partition_name
+                'partitionName' => $partitionName
             ]
         ]);
     }
