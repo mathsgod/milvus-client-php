@@ -15,24 +15,24 @@ class DataTest extends TestCase
         self::$client = new Client();
         // 刪除舊的 collection（如果存在）
         try {
-            self::$client->drop_collection(self::$collectionName);
+            self::$client->dropCollection(self::$collectionName);
         } catch (\Exception $e) {
             // 忽略不存在的錯誤
         }
 
         // 建立 schema
-        $schema = self::$client->create_schema();
+        $schema = self::$client->createSchema();
         $schema->add_field(field_name: "id", datatype: DataType::INT64, is_primary: true);
         $schema->add_field(field_name: "vector", datatype: DataType::FLOAT_VECTOR, dim: 2);
 
 
         //create index params
-        $indexParams = self::$client->prepare_index_params();
+        $indexParams = self::$client->prepareIndexParams();
         $indexParams->addIndex(field_name: "vector", index_name: "my_index", index_type: Milvus\IndexType::AUTOINDEX, metric_type: Milvus\MetricType::COSINE);
 
 
         // 建立 collection
-        self::$client->create_collection(
+        self::$client->createCollection(
             collection_name: self::$collectionName,
             schema: $schema,
             index_params: $indexParams
@@ -81,6 +81,6 @@ class DataTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        self::$client->drop_collection(self::$collectionName);
+        self::$client->dropCollection(self::$collectionName);
     }
 }
