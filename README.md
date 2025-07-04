@@ -161,19 +161,21 @@ $client->dropDatabase("my_db");
 ### Create Collection
 
 ```php
-$schema = $client->createSchema();
-$schema->add_field("id", Milvus\DataType::INT64, true);
-$schema->add_field("vector", Milvus\DataType::FLOAT_VECTOR, false, 5);
-
 $client->createCollection(
-    "test_collection",
-    5,
-    "id",
-    "vector",
-    "COSINE",
-    false,
-    null,
-    $schema
+    collection_name: "test_collection",
+    schema: $client->createSchema()
+        ->addField("id", Milvus\DataType::INT64, is_primary: true)
+        ->addField("array", Milvus\DataType::ARRAY, element_type: Milvus\DataType::INT64, max_capacity: 10)
+        ->addField("vector", Milvus\DataType::FLOAT_VECTOR, dim: 5)
+        ->addField("text", Milvus\DataType::VARCHAR, max_length: 1000, nullable: true)
+        ->addField("metadata", Milvus\DataType::JSON, nullable: true),
+    index_params: $client->prepareIndexParams()
+        ->addIndex(
+            field_name: "vector",
+            index_name: "my_index",
+            index_type: Milvus\IndexType::AUTOINDEX,
+            metric_type: Milvus\MetricType::COSINE
+        ),
 );
 ```
 
@@ -244,12 +246,12 @@ $client->delete("test_collection", "id in [1]");
 
 ```php
 $result = $client->search(
-    "test_collection",
-    [[1.0, 2.0, 3.0, 4.0, 5.0]],
-    "",
-    10,
-    ["id"]
-);
+    collection_name: "test_collection",
+    data: [[1.0, 2.0, 3.0, 4.0, 5.0]],
+    anns_field: "vector",
+    limit: 10,
+    output_fields: ["id", "vector"]
+); 
 ```
 
 ---
@@ -351,11 +353,13 @@ $client->grantPrivilege("admin", "Collection", "Insert", "test_collection");
 
 ```php
 $result = $client->hybridSearch(
-    "test_collection",
-    $reqs,      // search conditions
-    $ranker,    // ranking rules
-    10,         // limit
-    ["id", "vector"] // output fields
+    collection_name: "test_collection",
+    reqs: [
+        ["vector" => [1.0, 2.0, 3.0, 4.0, 5.0], "text" => "example text"]
+    ],
+    ranker: new Milvus\RRFRanker(10),
+    limit: 10,
+    output_fields: ["id", "vector"]
 );
 ```
 
