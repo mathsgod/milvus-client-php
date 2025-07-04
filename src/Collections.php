@@ -42,7 +42,7 @@ class Collections
         string $collectionName,
         string $fieldName,
         array $fieldParams,
-        ?string $dbName = null
+        ?string $dbName = null,
     ) {
         return $this->client->post("/v2/vectordb/collections/fields/alter_properties", [
             "json" => [
@@ -115,8 +115,11 @@ class Collections
         $data['autoID'] = $autoID;
         $data['params'] = $params;
 
+        $data = array_filter($data, fn($value) => $value !== null);
+        
+
         return $this->client->post("/v2/vectordb/collections/create", [
-            "json" => array_filter($data, fn($value) => $value !== null)
+            "json" => $data
         ]);
     }
 

@@ -16,13 +16,13 @@ class CollectionSchema implements \JsonSerializable
 
     public function jsonSerialize(): mixed
     {
-        return [
+        $data = [
             'autoID' => $this->auto_id,
             "enabledDynamicField" => $this->enable_dynamic_field,
-            'fields' => array_map(function ($field) {
-                return $field->jsonSerialize();
-            }, $this->fields)
+            'fields' => $this->fields,
         ];
+
+        return array_filter($data, fn($value) => $value !== null);
     }
 
     public function getFields()
@@ -32,65 +32,59 @@ class CollectionSchema implements \JsonSerializable
 
 
     public function addField(
-        string $field_name,
-        string $datatype,
-        bool $is_primary = false,
-        int $max_length = 0, // corrected spelling from 'max_lenght' to 'max_length'
+        string $field_name, //The name of the field.
+        string $datatype, //The data type of the field.
+        ?bool $is_primary = null,
+        ?int $max_length = null, // corrected spelling from 'max_lenght' to 'max_length'
         ?string $element_type = null,
         ?int $max_capacity = null,
         ?int $dim = null,
-        bool $is_partition_key = false,
-        bool $is_clustering_key = false,
-        bool $mmap_enabled = false,
-        ?bool $nullable = false
+        ?bool $is_partition_key = null,
+        ?bool $is_clustering_key = null,
+        ?bool $mmap_enabled = null,
+        ?bool $nullable = null,
     ) {
-
-        if ($is_primary) {
-
-            $this->fields[] = new FieldSchema(
-                $field_name,
-                $datatype,
-                null, // description
-                true, // is_primary
-                $this->auto_id, // auto_id
-                $is_partition_key, // is_partition_key
-                $max_length, // max_length
-                $dim // dim
-            );
-            return $this;
-        }
 
         if ($datatype == DataType::INT8_VECTOR || $datatype == DataType::FLOAT_VECTOR) {
             if ($dim === null) {
                 throw new \InvalidArgumentException('Dimension must be specified for vector fields.');
             }
-
-            $this->fields[] = new FieldSchema(
-                $field_name,
-                $datatype,
-                null, // description
-                false, // is_primary
-                $this->auto_id, // auto_id
-                $is_partition_key, // is_partition_key
-                $max_length, // max_length
-                $dim, // dim,
-                $nullable // nullable
-
-            );
         }
 
-        if ($datatype === DataType::INT64 || $datatype === DataType::VARCHAR) {
+        $field = [
+            "fieldName" => $field_name,
+            "dataType" => $datatype,
+            "autoId" => false,
+            "elementDataType" => $element_type,
+        ];
 
-            $this->fields[] = new FieldSchema(
-                $field_name,
-                $datatype,
-                null, // description
-                false, // is_primary
-                $this->auto_id, // auto_id
-                $is_partition_key, // is_partition_key
-                $max_length, // max_length
-                null // dim
-            );
+        if ($is_primary !== null) {
+            $field["isPrimary"] = $is_primary;
         }
+
+
+
+        if ($dim !== null) {
+            $field["elementTypeParams"] = [
+                "dim" => $dim
+            ];
+        }
+
+        if ($max_length !== null) {
+            $field["elementTypeParams"] = [
+                "max_length" => $max_length
+            ];
+        }
+
+        if ($max_capacity !== null) {
+            $field["elementTypeParams"] = [
+                "max_capacity" => $max_capacity
+            ];
+        }
+
+        $this->fields[] = $field;
+
+
+        return $this;
     }
 }

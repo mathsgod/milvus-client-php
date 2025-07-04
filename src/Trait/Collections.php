@@ -102,7 +102,7 @@ trait Collections
             schema: $schema,
             indexParams: $index_params,
             enableDynamicField: $enable_dynamic_field,
-            params: $params
+            //params: $params
 
         );
     }
