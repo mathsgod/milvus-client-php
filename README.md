@@ -355,10 +355,14 @@ $client->grantPrivilege("admin", "Collection", "Insert", "test_collection");
 $result = $client->hybridSearch(
     collection_name: "test_collection",
     reqs: [
-        ["vector" => [1.0, 2.0, 3.0, 4.0, 5.0], "text" => "example text"]
+        new AnnSearchRequest(
+            data: [[0.1, 0.2, 0.3, 0.4, 0.5]],
+            anns_field: "vector",
+            limit: 10,
+            param: []
+        ),
     ],
     ranker: new Milvus\RRFRanker(10),
-    limit: 10,
     output_fields: ["id", "vector"]
 );
 ```
