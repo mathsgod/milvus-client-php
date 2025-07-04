@@ -201,6 +201,93 @@ print_r($client->search(
 
 ---
 
+## Hybrid Search Example
+
+```php
+$client = new Milvus\Client();
+
+$client->dropCollection("testing");
+
+// Hybrid Search
+$client->createCollection(
+    collection_name: "testing",
+    schema: $client->createSchema()
+        ->addField("id", Milvus\DataType::INT64, is_primary: true)
+        ->addField("vector", Milvus\DataType::FLOAT_VECTOR, dim: 5)
+        ->addField("document", Milvus\DataType::VARCHAR, max_length: 1000, enable_analyzer: true, enable_match: true)
+        ->addField("text_sparse", Milvus\DataType::SPARSE_FLOAT_VECTOR)
+        ->addFunction(
+            name: "bm25",
+            function_type: Milvus\FunctionType::BM25,
+            input_field_names: ["document"],
+            output_field_names: ["text_sparse"]
+        ),
+    index_params: $client->prepareIndexParams()
+        ->addIndex(
+            field_name: "vector",
+            index_name: "my_index",
+            index_type: Milvus\IndexType::AUTOINDEX,
+            metric_type: Milvus\MetricType::COSINE
+        )->addIndex(
+            field_name: "text_sparse",
+            index_name: "text_sparse_index",
+            index_type: Milvus\IndexType::SPARSE_INVERTED_INDEX,
+            metric_type: Milvus\MetricType::BM25
+        ),
+);
+
+// Insert data
+$client->insert(
+    collection_name: "testing",
+    data: [
+        [
+            "id" => 1,
+            "vector" => [0.1, 0.2, 0.3, 0.4, 0.5],
+            "document" => "This is a sample document for testing.",
+        ],
+        [
+            "id" => 2,
+            "vector" => [0.6, 0.7, 0.8, 0.9, 1.0],
+            "document" => "Another document for testing purposes.",
+        ],
+        [
+            "id" => 3,
+            "vector" => [0.1, 0.2, 0.3, 0.4, 0.5],
+            "document" => "Milvus is a vector database designed for scalable similarity search.",
+        ],
+        [
+            "id" => 4,
+            "vector" => [0.6, 0.7, 0.8, 0.9, 1.0],
+            "document" => "Full-text search enables users to find relevant documents quickly.",
+        ],
+    ]
+);
+
+$query = "sample document";
+
+print_r($client->hybridSearch(
+    collection_name: "testing",
+    reqs: [
+        new AnnSearchRequest(
+            data: [[0.1, 0.2, 0.3, 0.4, 0.5]], // embedding vector of the query
+            anns_field: "vector",
+            limit: 10,
+            param: ["nprobe" => 10] // search parameters
+        ),
+        new AnnSearchRequest(
+            data: [$query], // query string
+            anns_field: "text_sparse",
+            limit: 10,
+            param: ["drop_ratio_search" => 0.2]
+        )
+    ],
+    ranker: new WeightedRanker([0.5, 0.5]),
+    output_fields: ["id", "document"]
+));
+```
+
+---
+
 ## Database Operations
 
 ### Create Database

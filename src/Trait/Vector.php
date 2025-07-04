@@ -15,14 +15,14 @@ trait Vector
         array $reqs,
         $ranker,
         ?int $limit = null,
-        ?array $outputFields = []
+        ?array $output_fields = []
     ) {
         return (new Entities($this))->hybridSearch(
             $collection_name,
             $reqs,
             $ranker,
             $limit,
-            $outputFields
+            $output_fields
         );
     }
 
