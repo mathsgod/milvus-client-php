@@ -42,6 +42,7 @@ class Client
             'base_uri' => $uri,
             "verify" => false,
             "headers" => $headers,
+            "timeout" => $timeout
         ]);
     }
 
