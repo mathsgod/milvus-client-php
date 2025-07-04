@@ -13,6 +13,24 @@ class CollectionTest extends TestCase
         $this->client = new Client();
     }
 
+    public function testCreateCollectionQuick()
+    {
+        $collectionName = 'phpunit_test_collection_' . uniqid();
+        // 建立 collection
+        $this->client->create_collection(
+            collection_name: $collectionName,
+            dimension: 5
+        );
+
+        // 應該能在列表中找到
+        $collections = $this->client->list_collections();
+        $this->assertContains($collectionName, $collections);
+
+        // 清理
+        $this->client->drop_collection($collectionName);
+    }
+
+
     public function testCreateAndDropCollection()
     {
         $collectionName = 'phpunit_test_collection_' . uniqid();

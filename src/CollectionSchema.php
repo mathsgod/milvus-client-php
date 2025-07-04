@@ -7,9 +7,11 @@ class CollectionSchema implements \JsonSerializable
 
     public function __construct(
         private array $fields = [],
-        private string $description = "",
-        private bool $auto_id = false,
-        private bool $enable_dynamic_field = false
+        private ?bool $auto_id = null,
+        private ?bool $enable_dynamic_field = null,
+        private ?string $description = null,
+        private ?string $primary_field = null,
+        private ?string $partition_key_field = null,
     ) {}
 
     public function jsonSerialize(): mixed

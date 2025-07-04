@@ -15,10 +15,10 @@ class DataType
     const VARCHAR = 'VarChar';
 
     const FLOAT_VECTOR = 'FloatVector';
-    const BFLOAT16_VECTOR = 'BFLOAT16_VECTOR';
-    const INT8_VECTOR = 'INT8_VECTOR';
+    const BFLOAT16_VECTOR = 'BFloat16Vector';
+    const INT8_VECTOR = 'Int8Vector';
     const BINARY_VECTOR = 'BINARY_VECTOR';
-    const SPARSE_FLOAT_VECTOR = 'SPARSE_FLOAT_VECTOR';
+    const SPARSE_FLOAT_VECTOR = 'SparseFloatVector';
 
 
     const JSON = 'JSON';

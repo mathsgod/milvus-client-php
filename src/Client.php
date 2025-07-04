@@ -94,7 +94,7 @@ class Client
         return $data["data"];
     }
 
-    public function prepare_index_params()
+    public function prepareIndexParams()
     {
         return new IndexParams();
     }

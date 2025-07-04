@@ -9,7 +9,7 @@ trait Vector
     /**
      * This operation performs multi-vector search on a collection and returns search results after reranking.
      */
-    public function hybrid_search(
+    public function hybridSearch(
         string $collection_name,
         array $reqs,
         ?array $ranker = null,
