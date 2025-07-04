@@ -11,6 +11,7 @@ class IndexParams implements \JsonSerializable
         ?string $index_name = null,
         ?string $index_type = null,
         ?string $metric_type = null,
+        ?array $params = null
     ) {
 
         $index = [
@@ -18,6 +19,7 @@ class IndexParams implements \JsonSerializable
             'indexName' => $index_name,
             'indexType' => $index_type,
             'metricType' => $metric_type,
+            'params' => $params,
         ];
 
         // Remove null values

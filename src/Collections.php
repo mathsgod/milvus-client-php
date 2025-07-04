@@ -100,7 +100,8 @@ class Collections
         ?bool $autoID = false,
         ?CollectionSchema $schema = null,
         ?IndexParams $indexParams = null,
-        ?bool $enableDynamicField = false
+        ?bool $enableDynamicField = false,
+        ?array $params = null
     ) {
         $data = ["collectionName" => $collectionName];
         $data['schema'] = $schema;
@@ -112,9 +113,7 @@ class Collections
         $data['metricType'] = $metricType;
         $data['idType'] = $idType;
         $data['autoID'] = $autoID;
-
-
-
+        $data['params'] = $params;
 
         return $this->client->post("/v2/vectordb/collections/create", [
             "json" => array_filter($data, fn($value) => $value !== null)

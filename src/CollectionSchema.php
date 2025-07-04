@@ -41,7 +41,8 @@ class CollectionSchema implements \JsonSerializable
         ?int $dim = null,
         bool $is_partition_key = false,
         bool $is_clustering_key = false,
-        bool $mmap_enabled = false
+        bool $mmap_enabled = false,
+        ?bool $nullable = false
     ) {
 
         if ($is_primary) {
@@ -72,7 +73,9 @@ class CollectionSchema implements \JsonSerializable
                 $this->auto_id, // auto_id
                 $is_partition_key, // is_partition_key
                 $max_length, // max_length
-                $dim // dim
+                $dim, // dim,
+                $nullable // nullable
+
             );
         }
 

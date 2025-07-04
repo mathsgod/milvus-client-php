@@ -71,8 +71,25 @@ trait Collections
         ?CollectionSchema $schema = null,
         ?IndexParams $index_params = null,
         ?bool $enable_dynamic_field = null,
+        ?int $num_shards = null,
         ?float $timeout = null,
+        ?bool $enable_mmap = null,
+        ?string $consistency_level = null
     ) {
+
+        $params = [];
+        if ($num_shards !== null) {
+            $params['shardsNum'] = $num_shards;
+        }
+
+        if ($enable_mmap !== null) {
+            $params['mmap.enabled'] = $enable_mmap;
+        }
+
+        if ($consistency_level !== null) {
+            $params['consistencyLevel'] = $consistency_level;
+        }
+
         /** @var \Milvus\Client $this */
         $this->collections()->create(
             collectionName: $collection_name,
@@ -84,7 +101,9 @@ trait Collections
             autoID: $auto_id,
             schema: $schema,
             indexParams: $index_params,
-            enableDynamicField: $enable_dynamic_field
+            enableDynamicField: $enable_dynamic_field,
+            params: $params
+
         );
     }
 

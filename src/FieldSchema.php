@@ -14,6 +14,7 @@ class FieldSchema implements \JsonSerializable
         protected ?bool $is_partition_key = null,
         protected ?int $max_length  = null,
         protected ?int $dim  = null,
+        protected ?bool $nullable = null,
     ) {}
 
     public function jsonSerialize(): mixed
@@ -40,10 +41,15 @@ class FieldSchema implements \JsonSerializable
                 "max_length" => $this->max_length
             ];
         }
+
         if ($this->dim !== null) {
             $field["elementTypeParams"] = [
                 "dim" => $this->dim
             ];
+        }
+
+        if ($this->nullable !== null) {
+            $field['nullable'] = $this->nullable;
         }
 
         return $field;
