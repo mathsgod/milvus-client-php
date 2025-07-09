@@ -61,11 +61,6 @@ class Client
         return new Aliases($this);
     }
 
-    public function collections()
-    {
-        return new Collections($this);
-    }
-
     public function databases()
     {
         return new Databases($this);

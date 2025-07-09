@@ -9,9 +9,17 @@ use Milvus\MetricType;
 trait Collections
 {
 
+
+    public function collections()
+    {
+        return new Collections($this);
+    }
+
+
+
     public function loadCollection(string $collection_name)
     {
-        return (new \Milvus\Collections($this))->load($collection_name);
+        return $this->collections()->load($collection_name);
     }
 
 
@@ -32,7 +40,7 @@ trait Collections
         array $field_params,
         ?string $db_name = null
     ) {
-        return (new \Milvus\Collections($this))->alterFieldProperties(
+        return $this->collections()->alterFieldProperties(
             $collection_name,
             $field_name,
             $field_params,
@@ -45,7 +53,7 @@ trait Collections
      */
     public function alterCollectionProperties(string $collection_name, array $properties)
     {
-        return (new \Milvus\Collections($this))->alterProperties($collection_name, $properties);
+        return $this->collections()->alterProperties($collection_name, $properties);
     }
 
     /**
@@ -97,7 +105,7 @@ trait Collections
         }
 
         /** @var \Milvus\Client $this */
-        (new \Milvus\Collections($this))->create(
+        $this->collections()->create(
             collectionName: $collection_name,
             dimension: $dimension,
             idType: $id_type,
@@ -146,7 +154,7 @@ trait Collections
      */
     public function describeCollection(string $collection_name)
     {
-        return (new \Milvus\Collections($this))->describe($collection_name);
+        return $this->collections()->describe($collection_name);
     }
 
 
@@ -163,7 +171,7 @@ trait Collections
      */
     public function dropCollection(string $collection_name)
     {
-        (new \Milvus\Collections($this))->drop($collection_name);
+        $this->collections()->drop($collection_name);
     }
 
     /**
@@ -171,7 +179,7 @@ trait Collections
      */
     public function dropCollectionProperties(string $collection_name, array $property_keys)
     {
-        return (new \Milvus\Collections($this))->dropProperties($collection_name, $property_keys);
+        return $this->collections()->dropProperties($collection_name, $property_keys);
     }
 
     /**
@@ -179,7 +187,7 @@ trait Collections
      */
     public function getCollectionStats(string $collection_name): array
     {
-        return (new \Milvus\Collections($this))->getStats($collection_name);
+        return $this->collections()->getStats($collection_name);
     }
 
     /**
@@ -187,7 +195,7 @@ trait Collections
      */
     public function hasCollection(string $collection_name): bool
     {
-        return (new \Milvus\Collections($this))->has($collection_name)["has"];
+        return $this->collections()->has($collection_name)["has"];
     }
 
 
@@ -204,7 +212,7 @@ trait Collections
      */
     public function listCollections()
     {
-        return (new \Milvus\Collections($this))->list();
+        return $this->collections()->list();
     }
 
     /**
@@ -212,6 +220,6 @@ trait Collections
      */
     public function renameCollection(string $old_name, string $new_name)
     {
-        return (new \Milvus\Collections($this))->rename($old_name, $new_name);
+        return $this->collections()->rename($old_name, $new_name);
     }
 }
