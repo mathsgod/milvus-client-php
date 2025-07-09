@@ -11,65 +11,45 @@ class Roles
         $this->client = $client;
     }
 
-    public function create(string $roleName)
+    public function create(array $params)
     {
         return $this->client->post("/v2/vectordb/roles/create", [
-            "json" => [
-                "roleName" => $roleName,
-            ],
+            "json" => $params,
         ]);
     }
 
-    public function describe(string $role_name)
+    public function describe(array $params)
     {
         return $this->client->post("/v2/vectordb/roles/describe", [
-            "json" => [
-                "roleName" => $role_name,
-            ],
+            "json" => $params,
         ]);
     }
 
-    public function drop(string $role_name)
+    public function drop(array $params)
     {
         return $this->client->post("/v2/vectordb/roles/drop", [
-            "json" => [
-                "roleName" => $role_name,
-            ],
+            "json" => $params,
         ]);
     }
 
-    public function list()
+    public function list(array $params = [])
     {
         return $this->client->post("/v2/vectordb/roles/list", [
-            "body" => "{}",
+            "json" => $params,
         ]);
     }
 
-    public function grantPrivilege(
-        string $role_name,
-        string $object_type,
-        string $privilege,
-        string $object_name
-    ) {
+    public function grantPrivilege(array $params)
+    {
         return $this->client->post("/v2/vectordb/roles/grant_privilege", [
-            "json" => [
-                "roleName" => $role_name,
-                "objectType" => $object_type,
-                "objectName" => $object_name,
-                "privilege" => $privilege,
-            ],
+            "json" => $params,
         ]);
     }
 
-    public function revokePrivilege(string $role_name, string $object_type, string $object_name, string $privilege)
+    public function revokePrivilege(array $params)
     {
         return $this->client->post("/v2/vectordb/roles/revoke_privilege", [
-            "json" => [
-                "roleName" => $role_name,
-                "objectType" => $object_type,
-                "objectName" => $object_name,
-                "privilege" => $privilege,
-            ],
+            "json" => $params,
         ]);
     }
 }

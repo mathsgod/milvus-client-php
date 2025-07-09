@@ -6,32 +6,45 @@ trait Authentication
 {
     public function createRole(string $role_name)
     {
-        $this->roles()->create($role_name);
+        $this->roles()->create([
+            'roleName' => $role_name
+        ]);
     }
 
     public function createUser(string $user_name, string $password)
     {
-        $this->users()->create($user_name, $password);
+        $this->users()->create([
+            'userName' => $user_name,
+            'password' => $password
+        ]);
     }
 
     public function describeRole(string $role_name): array
     {
-        return $this->roles()->describe($role_name);
+        return $this->roles()->describe([
+            'roleName' => $role_name
+        ]);
     }
 
     public function describeUser(string $user_name): array
     {
-        return $this->users()->describe($user_name);
+        return $this->users()->describe([
+            'userName' => $user_name
+        ]);
     }
 
     public function dropRole(string $role_name)
     {
-        $this->roles()->drop($role_name);
+        $this->roles()->drop([
+            'roleName' => $role_name
+        ]);
     }
 
     public function dropUser(string $user_name)
     {
-        $this->users()->drop($user_name);
+        $this->users()->drop([
+            'userName' => $user_name
+        ]);
     }
 
     public function grantPrivilege(
@@ -40,13 +53,14 @@ trait Authentication
         string $privilege,
         string $object_name
     ) {
-        $this->roles()->grantPrivilege(
-            $role_name,
-            $object_type,
-            $privilege,
-            $object_name
-        );
+        $this->roles()->grantPrivilege([
+            'roleName' => $role_name,
+            'objectType' => $object_type,
+            'objectName' => $object_name,
+            'privilege' => $privilege
+        ]);
     }
+
     public function listRoles(): array
     {
         return $this->roles()->list();
