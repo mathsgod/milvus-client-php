@@ -8,7 +8,7 @@ class AnnSearchRequest implements JsonSerializable
 {
 
     public function __construct(
-        private array $data,
+        private array $data, //A list of vector embeddings. Milvus searches for the most similar vector embeddings to the specified ones.
         private string $anns_field,
         private int $limit,
         private ?int $offset = null,
