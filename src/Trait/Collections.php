@@ -10,7 +10,7 @@ trait Collections
 {
     public function collections()
     {
-        return new \Milvus\Collections($this);
+        return new \Milvus\Http\Collections($this);
     }
 
     public function loadCollection(string $collection_name)
