@@ -3,7 +3,7 @@
 namespace Milvus\Trait;
 
 use JsonSerializable;
-use Milvus\Entities;
+use Milvus\Http\Entities;
 
 trait Vector
 {
@@ -19,15 +19,15 @@ trait Vector
         ?string $partition_name = null,
         ?string $consistency_level = null
     ) {
-        return (new Entities($this))->hybridSearch(
-            $collection_name,
-            $search,
-            $ranker,
-            $limit,
-            $output_fields,
-            $partition_name,
-            $consistency_level
-        );
+        return (new Entities($this))->hybridSearch([
+            'collectionName' => $collection_name,
+            'search' => $search,
+            'rerank' => $ranker,
+            'limit' => $limit,
+            'outputFields' => $output_fields,
+            'partitionNames' => $partition_name,
+            'consistencyLevel' => $consistency_level
+        ]);
     }
 
     /**
@@ -37,7 +37,10 @@ trait Vector
         string $collection_name,
         array $data,
     ) {
-        return $this->entities()->insert($collection_name, $data);
+        return (new Entities($this))->insert([
+            'collectionName' => $collection_name,
+            'data' => $data
+        ]);
     }
 
     /**
@@ -45,7 +48,11 @@ trait Vector
      */
     public function get(string $collection_name, array $ids, ?array $output_fields = null)
     {
-        return (new Entities($this))->get($collection_name, $ids, $output_fields);
+        return (new Entities($this))->get([
+            'collectionName' => $collection_name,
+            'id' => $ids,
+            'outputFields' => $output_fields
+        ]);
     }
 
     /**
@@ -61,7 +68,10 @@ trait Vector
             $filter = "id in [" . implode(',', $ids) . "]";
         }
 
-        return (new Entities($this))->delete($collection_name, $filter);
+        return (new Entities($this))->delete([
+            'collectionName' => $collection_name,
+            'filter' => $filter
+        ]);
     }
 
     /**
@@ -76,14 +86,14 @@ trait Vector
         ?int $offset = null
     ) {
         return (new Entities($this))
-            ->query(
-                collectionName: $collection_name,
-                filter: $filter,
-                outputFields: $output_fields,
-                partitionNames: $partition_names,
-                limit: $limit,
-                offset: $offset
-            );
+            ->query([
+                'collectionName' => $collection_name,
+                'filter' => $filter,
+                'outputFields' => $output_fields,
+                'partitionNames' => $partition_names,
+                'limit' => $limit,
+                'offset' => $offset
+            ]);
     }
 
     public function search(
@@ -98,17 +108,17 @@ trait Vector
         ?string $consistency_level = null,
 
     ) {
-        return (new Entities($this))->search(
-            collectionName: $collection_name,
-            data: $data,
-            filter: $filter,
-            outputFields: $output_fields,
-            annsField: $anns_field,
-            limit: $limit,
-            searchParams: $search_params,
-            partitionNames: $partition_names,
-            consistencyLevel: $consistency_level,
-        );
+        return (new Entities($this))->search([
+            'collectionName' => $collection_name,
+            'data' => $data,
+            'filter' => $filter,
+            'outputFields' => $output_fields,
+            'annsField' => $anns_field,
+            'limit' => $limit,
+            'searchParams' => $search_params,
+            'partitionNames' => $partition_names,
+            'consistencyLevel' => $consistency_level
+        ]);
     }
 
     public function upsert(
@@ -116,6 +126,10 @@ trait Vector
         array $data,
         ?string $partition_name = null
     ) {
-        return (new Entities($this))->upsert($collection_name, $data, $partition_name);
+        return (new Entities($this))->upsert([
+            'collectionName' => $collection_name,
+            'data' => $data,
+            'partitionName' => $partition_name
+        ]);
     }
 }
