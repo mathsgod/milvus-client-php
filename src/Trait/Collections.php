@@ -8,20 +8,17 @@ use Milvus\MetricType;
 
 trait Collections
 {
-
-
     public function collections()
     {
-        return new Collections($this);
+        return new \Milvus\Collections($this);
     }
-
-
 
     public function loadCollection(string $collection_name)
     {
-        return $this->collections()->load($collection_name);
+        return $this->collections()->load([
+            'collectionName' => $collection_name
+        ]);
     }
-
 
     /**
      * This operation reassigns the alias of one collection to another.
@@ -40,12 +37,12 @@ trait Collections
         array $field_params,
         ?string $db_name = null
     ) {
-        return $this->collections()->alterFieldProperties(
-            $collection_name,
-            $field_name,
-            $field_params,
-            $db_name,
-        );
+        return $this->collections()->alterFieldProperties([
+            'collectionName' => $collection_name,
+            'fieldName' => $field_name,
+            'fieldParams' => $field_params,
+            'dbName' => $db_name,
+        ]);
     }
 
     /**
@@ -53,7 +50,10 @@ trait Collections
      */
     public function alterCollectionProperties(string $collection_name, array $properties)
     {
-        return $this->collections()->alterProperties($collection_name, $properties);
+        return $this->collections()->alterProperties([
+            'collectionName' => $collection_name,
+            'properties' => $properties
+        ]);
     }
 
     /**
@@ -85,8 +85,6 @@ trait Collections
         ?string $consistency_level = null,
         ?array $properties = null
     ) {
-
-
         $params = [];
         if ($num_shards !== null) {
             $params['shardsNum'] = $num_shards;
@@ -105,20 +103,19 @@ trait Collections
         }
 
         /** @var \Milvus\Client $this */
-        $this->collections()->create(
-            collectionName: $collection_name,
-            dimension: $dimension,
-            idType: $id_type,
-            primaryFieldName: $primary_field_name,
-            vectorFieldName: $vector_field_name,
-            metricType: $metric_type,
-            autoID: $auto_id,
-            schema: $schema,
-            indexParams: $index_params,
-            enableDynamicField: $enable_dynamic_field,
-            params: empty($params) ? null : $params
-
-        );
+        $this->collections()->create([
+            'collectionName' => $collection_name,
+            'dimension' => $dimension,
+            'idType' => $id_type,
+            'primaryFieldName' => $primary_field_name,
+            'vectorFieldName' => $vector_field_name,
+            'metricType' => $metric_type,
+            'autoID' => $auto_id,
+            'schema' => $schema,
+            'indexParams' => $index_params,
+            'enableDynamicField' => $enable_dynamic_field,
+            'params' => empty($params) ? null : $params
+        ]);
     }
 
     /**
@@ -139,7 +136,6 @@ trait Collections
         );
     }
 
-
     /**
      * This operation displays the details of an alias.
      */
@@ -148,15 +144,15 @@ trait Collections
         return $this->aliases()->describe($alias);
     }
 
-
     /**
      * This operation lists detailed information about a specific collection.
      */
     public function describeCollection(string $collection_name)
     {
-        return $this->collections()->describe($collection_name);
+        return $this->collections()->describe([
+            'collectionName' => $collection_name
+        ]);
     }
-
 
     /**
      * This operation drops a specified collection alias.
@@ -171,7 +167,9 @@ trait Collections
      */
     public function dropCollection(string $collection_name)
     {
-        $this->collections()->drop($collection_name);
+        $this->collections()->drop([
+            'collectionName' => $collection_name
+        ]);
     }
 
     /**
@@ -179,7 +177,10 @@ trait Collections
      */
     public function dropCollectionProperties(string $collection_name, array $property_keys)
     {
-        return $this->collections()->dropProperties($collection_name, $property_keys);
+        return $this->collections()->dropProperties([
+            'collectionName' => $collection_name,
+            'properties' => $property_keys
+        ]);
     }
 
     /**
@@ -187,7 +188,9 @@ trait Collections
      */
     public function getCollectionStats(string $collection_name): array
     {
-        return $this->collections()->getStats($collection_name);
+        return $this->collections()->getStats([
+            'collectionName' => $collection_name
+        ]);
     }
 
     /**
@@ -195,9 +198,10 @@ trait Collections
      */
     public function hasCollection(string $collection_name): bool
     {
-        return $this->collections()->has($collection_name)["has"];
+        return $this->collections()->has([
+            'collectionName' => $collection_name
+        ])["has"];
     }
-
 
     /**
      * This operation lists all existing aliases for a specific collection.
@@ -220,6 +224,9 @@ trait Collections
      */
     public function renameCollection(string $old_name, string $new_name)
     {
-        return $this->collections()->rename($old_name, $new_name);
+        return $this->collections()->rename([
+            'oldName' => $old_name,
+            'newName' => $new_name
+        ]);
     }
 }
