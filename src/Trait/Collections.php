@@ -23,11 +23,11 @@ trait Collections
     /**
      * This operation reassigns the alias of one collection to another.
      */
-    public function alterAlias(string $collection_name, string $alias)
+    public function alterAlias(string $collection_name, string $alias_name)
     {
         $this->aliases()->alter([
             'collectionName' => $collection_name,
-            'aliasName' => $alias
+            'aliasName' => $alias_name
         ]);
     }
 
@@ -62,12 +62,12 @@ trait Collections
     /**
      * This operation creates an alias for an existing collection.
      */
-    public function createAlias(string $collection_name, string $alias)
+    public function createAlias(string $collection_name, string $alias_name)
     {
         /** @var \Milvus\Client $this */
         $this->aliases()->create([
             'collectionName' => $collection_name,
-            'aliasName' => $alias
+            'aliasName' => $alias_name
         ]);
     }
 
@@ -145,10 +145,10 @@ trait Collections
     /**
      * This operation displays the details of an alias.
      */
-    public function describeAlias(string $alias): array
+    public function describeAlias(string $alias_name): array
     {
         return $this->aliases()->describe([
-            'aliasName' => $alias
+            'aliasName' => $alias_name
         ]);
     }
 
@@ -165,10 +165,10 @@ trait Collections
     /**
      * This operation drops a specified collection alias.
      */
-    public function dropAlias(string $alias)
+    public function dropAlias(string $alias_name)
     {
         $this->aliases()->drop([
-            'aliasName' => $alias
+            'aliasName' => $alias_name
         ]);
     }
 
@@ -185,11 +185,11 @@ trait Collections
     /**
      * This operation drops the specified collection properties.
      */
-    public function dropCollectionProperties(string $collection_name, array $property_keys)
+    public function dropCollectionProperties(string $collection_name, array $properties)
     {
         return $this->collections()->dropProperties([
             'collectionName' => $collection_name,
-            'properties' => $property_keys
+            'properties' => $properties
         ]);
     }
 
@@ -234,11 +234,11 @@ trait Collections
     /**
      * This operation renames an existing collection.
      */
-    public function renameCollection(string $old_name, string $new_name)
+    public function renameCollection(string $collection_name, string $new_collection_name)
     {
         return $this->collections()->rename([
-            'oldName' => $old_name,
-            'newName' => $new_name
+            'collectionName' => $collection_name,
+            'newCollectionName' => $new_collection_name
         ]);
     }
 }

@@ -13,31 +13,24 @@ class ResourceGroups
         $this->client = $client;
     }
 
-    public function create(string $name, array $config)
+    public function create(array $params)
     {
         return $this->client->post("/v2/vectordb/resource_groups/create", [
-            "json" => [
-                "name" => $name,
-                "config" => $config
-            ]
+            "json" => $params
         ]);
     }
 
-    public function describe(string $name)
+    public function describe(array $params)
     {
         return $this->client->post("/v2/vectordb/resource_groups/describe", [
-            "json" => [
-                "name" => $name
-            ]
+            "json" => $params
         ]);
     }
 
-    public function drop(string $name)
+    public function drop(array $params)
     {
         return $this->client->post("/v2/vectordb/resource_groups/drop", [
-            "json" => [
-                "name" => $name
-            ]
+            "json" => $params
         ]);
     }
 
@@ -48,24 +41,17 @@ class ResourceGroups
         ]);
     }
 
-    public function transferReplica(string $sourceRgName, string $targetRgName, string $collectionName, int $replicaNum)
+    public function transferReplica(array $params)
     {
         return $this->client->post("/v2/vectordb/resource_groups/transfer_replica", [
-            "json" => [
-                "sourceRgName" => $sourceRgName,
-                "targetRgName" => $targetRgName,
-                "collectionName" => $collectionName,
-                "replicaNum" => $replicaNum
-            ]
+            "json" => $params
         ]);
     }
 
-    public function alter(array $resource_groups)
+    public function alter(array $params)
     {
         return $this->client->post("/v2/vectordb/resource_groups/alter", [
-            "json" => [
-                "resource_groups" => $resource_groups
-            ]
+            "json" => $params
         ]);
     }
 }
