@@ -70,13 +70,19 @@ trait Vector
     public function query(
         string $collection_name,
         string $filter,
-        ?array $output_fields = null
+        ?array $output_fields = null,
+        ?array $partition_names = null,
+        ?int $limit = null,
+        ?int $offset = null
     ) {
         return (new Entities($this))
             ->query(
                 collectionName: $collection_name,
                 filter: $filter,
-                outputFields: $output_fields
+                outputFields: $output_fields,
+                partitionNames: $partition_names,
+                limit: $limit,
+                offset: $offset
             );
     }
 
