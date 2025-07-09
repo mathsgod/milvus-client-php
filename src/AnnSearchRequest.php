@@ -10,9 +10,13 @@ class AnnSearchRequest implements JsonSerializable
     public function __construct(
         private array $data,
         private string $anns_field,
-        private array $param,
         private int $limit,
+        private ?int $offset = null,
+        private ?bool $ignore_growing = null,
+        private ?string $metric_type = null,
         private ?string $filter = null,
+        private ?string $grouping_field = null,
+        private ?array $param = null
     ) {}
 
     public function jsonSerialize(): array
@@ -20,36 +24,20 @@ class AnnSearchRequest implements JsonSerializable
         $json = [
             'data' => $this->data,
             'annsField' => $this->anns_field,
+            'filter' => $this->filter,
+            'groupingField' => $this->grouping_field,
             'limit' => $this->limit,
-            "outputFields" => ["*"]
+            'offset' => $this->offset,
+            "outputFields" => ["*"],
+            'metricType' => $this->metric_type,
+            'ignoreGrowing' => $this->ignore_growing,
+            'params' => $this->param,
         ];
-        if (isset($this->filter)) {
-            $json['filter'] = $this->filter;
-        }
-        if (isset($this->param['groupingField'])) {
-            $json['groupingField'] = $this->param['groupingField'];
-        }
-        if (isset($this->param['metric_type'])) {
-            $json['metricType'] = $this->param['metric_type'];
-        }
 
-        if (isset($this->param['limit'])) {
-            $json['limit'] = $this->param['limit'];
-        }
-
-        if (isset($this->param['offset'])) {
-            $json['offset'] = $this->param['seaoffsetrchParams'];
-        }
-
-        if (isset($this->param['ignoreGrowing'])) {
-            $json['ignoreGrowing'] = $this->param['ignoreGrowing'];
-        }
-
-        if (isset($this->param['params'])) {
-            $json['params'] = $this->param['params'];
-        }
-
-
+        //filter out null values
+        $json = array_filter($json, function ($value) {
+            return !is_null($value);
+        });
 
         return $json;
     }
