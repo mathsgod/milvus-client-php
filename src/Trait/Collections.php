@@ -13,6 +13,13 @@ trait Collections
         return new \Milvus\Http\Collections($this);
     }
 
+    public function releaseCollection(string $collection_name)
+    {
+        return (new Collections($this))->release([
+            'collectionName' => $collection_name
+        ]);
+    }
+
     public function loadCollection(string $collection_name)
     {
         return $this->collections()->load([

@@ -14,11 +14,11 @@ class Client
     use Trait\Authentication;
     use Trait\Collections;
     use Trait\Vector;
-    use Trait\Management;
     use Trait\Database;
     use Trait\Partitions;
     use Trait\ResourceGroup;
     use Trait\DataImport;
+    use Trait\Indexes;
 
     private $client;
     private $dbName = "default";

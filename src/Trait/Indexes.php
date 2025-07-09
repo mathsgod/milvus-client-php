@@ -6,7 +6,7 @@ use Milvus\Http\Indexes as MilvusIndexes;
 
 trait Indexes
 {
-    public function createIndex(string $collection_name, $index_params)
+    public function createIndex(string $collection_name, array $index_params)
     {
         return (new MilvusIndexes($this))->create([
             'collectionName' => $collection_name,
