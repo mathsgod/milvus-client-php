@@ -15,14 +15,18 @@ trait Vector
         array $search,
         $ranker,
         ?int $limit = null,
-        ?array $output_fields = []
+        ?array $output_fields = [],
+        ?string $partition_name = null,
+        ?string $consistency_level = null
     ) {
         return (new Entities($this))->hybridSearch(
             $collection_name,
             $search,
             $ranker,
             $limit,
-            $output_fields
+            $output_fields,
+            $partition_name,
+            $consistency_level
         );
     }
 
