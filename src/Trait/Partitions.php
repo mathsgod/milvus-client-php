@@ -2,7 +2,7 @@
 
 namespace Milvus\Trait;
 
-use Milvus\Partitions as MilvusPartitions;
+use Milvus\Http\Partitions as MilvusPartitions;
 
 trait Partitions
 {

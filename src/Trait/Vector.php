@@ -2,7 +2,7 @@
 
 namespace Milvus\Trait;
 
-use JsonSerializable;
+
 use Milvus\Http\Entities;
 
 trait Vector

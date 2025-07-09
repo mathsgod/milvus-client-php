@@ -3,7 +3,7 @@
 namespace Milvus\Trait;
 
 use Milvus\Databases;
-use Milvus\Indexes;
+use Milvus\Http\Indexes;
 use Milvus\IndexParams;
 
 trait Management

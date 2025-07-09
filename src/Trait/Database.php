@@ -2,7 +2,7 @@
 
 namespace Milvus\Trait;
 
-use Milvus\Databases;
+use Milvus\Http\Databases;
 
 trait Database
 {

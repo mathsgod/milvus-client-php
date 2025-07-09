@@ -2,7 +2,7 @@
 
 namespace Milvus\Trait;
 
-use Milvus\Indexes as MilvusIndexes;
+use Milvus\Http\Indexes as MilvusIndexes;
 
 trait Indexes
 {
