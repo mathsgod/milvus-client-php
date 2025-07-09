@@ -2,6 +2,13 @@
 
 namespace Milvus;
 
+use Milvus\Http\Aliases;
+use Milvus\Http\Databases;
+use Milvus\Http\Entities;
+use Milvus\Http\Partitions;
+use Milvus\Http\Roles;
+use Milvus\Http\Users;
+
 class Client
 {
     use Trait\Authentication;
