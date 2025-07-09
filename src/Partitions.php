@@ -11,72 +11,52 @@ class Partitions
         $this->client = $client;
     }
 
-    public function create(string $collectionName, string $partitionName)
+    public function create(array $params)
     {
         return $this->client->post("/v2/vectordb/partitions/create", [
-            "body" => json_encode([
-                "collectionName" => $collectionName,
-                "partitionName" => $partitionName,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function drop(string $collectionName, string $partitionName)
+    public function drop(array $params)
     {
         return $this->client->post("/v2/vectordb/partitions/drop", [
-            "body" => json_encode([
-                "collectionName" => $collectionName,
-                "partitionName" => $partitionName,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function getStats(string $collectionName, string $partitionName)
+    public function getStats(array $params)
     {
         return $this->client->post("/v2/vectordb/partitions/get_stats", [
-            "body" => json_encode([
-                "collectionName" => $collectionName,
-                "partitionName" => $partitionName,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function has(string $collectionName, string $partitionName)
+    public function has(array $params)
     {
         return $this->client->post("/v2/vectordb/partitions/has", [
-            "body" => json_encode([
-                "collectionName" => $collectionName,
-                "partitionName" => $partitionName,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function list(string $collectionName)
+    public function list(array $params)
     {
         return $this->client->post("/v2/vectordb/partitions/list", [
-            "body" => json_encode([
-                "collectionName" => $collectionName,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function load(string $collectionName, array $partitionNames)
+    public function load(array $params)
     {
         return $this->client->post("/v2/vectordb/partitions/load", [
-            "body" => json_encode([
-                "collectionName" => $collectionName,
-                "partitionNames" => $partitionNames,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function release(string $collectionName, array $partitionNames)
+    public function release(array $params)
     {
         return $this->client->post("/v2/vectordb/partitions/release", [
-            "body" => json_encode([
-                "collectionName" => $collectionName,
-                "partitionNames" => $partitionNames,
-            ]),
+            "json" => $params
         ]);
     }
 }
