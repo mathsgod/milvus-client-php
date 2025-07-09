@@ -18,6 +18,7 @@ class Client
     use Trait\Database;
     use Trait\Partitions;
     use Trait\ResourceGroup;
+    use Trait\DataImport;
 
     private $client;
     private $dbName = "default";
