@@ -25,7 +25,10 @@ trait Collections
      */
     public function alterAlias(string $collection_name, string $alias)
     {
-        $this->aliases()->alter($collection_name, $alias);
+        $this->aliases()->alter([
+            'collectionName' => $collection_name,
+            'aliasName' => $alias
+        ]);
     }
 
     /**
@@ -62,7 +65,10 @@ trait Collections
     public function createAlias(string $collection_name, string $alias)
     {
         /** @var \Milvus\Client $this */
-        $this->aliases()->create($collection_name, $alias);
+        $this->aliases()->create([
+            'collectionName' => $collection_name,
+            'aliasName' => $alias
+        ]);
     }
 
     /**
@@ -141,7 +147,9 @@ trait Collections
      */
     public function describeAlias(string $alias): array
     {
-        return $this->aliases()->describe($alias);
+        return $this->aliases()->describe([
+            'aliasName' => $alias
+        ]);
     }
 
     /**
@@ -159,7 +167,9 @@ trait Collections
      */
     public function dropAlias(string $alias)
     {
-        $this->aliases()->drop($alias);
+        $this->aliases()->drop([
+            'aliasName' => $alias
+        ]);
     }
 
     /**
@@ -208,7 +218,9 @@ trait Collections
      */
     public function listAliases(string $collection_name)
     {
-        return $this->aliases()->list($collection_name);
+        return $this->aliases()->list([
+            'collectionName' => $collection_name
+        ]);
     }
 
     /**

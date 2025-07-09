@@ -15,48 +15,38 @@ class Aliases
     /**
      * This operation reassigns the alias of one collection to another.
      */
-    public function alter(string $collection_name, string $alias)
+    public function alter(array $params)
     {
         return $this->client->post("/v2/vectordb/aliases/alter", [
-            "json" => [
-                "aliasName" => $alias,
-                "collectionName" => $collection_name,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function create(string $collection_name, string $alias)
+    public function create(array $params)
     {
         return $this->client->post("/v2/vectordb/aliases/create", [
-            "json" => [
-                "aliasName" => $alias,
-                "collectionName" => $collection_name,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function describe(string $alias)
+    public function describe(array $params)
     {
         return $this->client->post("/v2/vectordb/aliases/describe", [
-            "json" => [
-                "aliasName" => $alias,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function drop(string $alias)
+    public function drop(array $params)
     {
         return $this->client->post("/v2/vectordb/aliases/drop", [
-            "json" => [
-                "aliasName" => $alias,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function list()
+    public function list(array $params = [])
     {
         return $this->client->post("/v2/vectordb/aliases/list", [
-            "body" => "{}"
+            "json" => $params
         ]);
     }
 }

@@ -79,6 +79,11 @@ class Client
 
     public function post($uri, array $options = []): array
     {
+        if (isset($options['json']) && (empty($options['json']) || $options['json'] === [])) {
+            unset($options['json']);
+            $options['body'] = "{}";
+        }
+
         $response = $this->client->post($uri, $options);
 
         $data = json_decode($response->getBody()->getContents(), true);
