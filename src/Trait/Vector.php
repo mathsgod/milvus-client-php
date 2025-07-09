@@ -15,7 +15,7 @@ trait Vector
         array $search,
         $ranker,
         ?int $limit = null,
-        ?array $output_fields = [],
+        ?array $output_fields = null,
         ?string $partition_name = null,
         ?string $consistency_level = null
     ) {

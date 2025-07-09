@@ -59,7 +59,7 @@ class Entities
         array $search,
         array|JsonSerializable $rerank,
         ?int $limit,
-        ?array $outputFields,
+        ?array $outputFields = null,
         ?array $partitionNames = null,
         ?string $consistencyLevel = null
     ) {
