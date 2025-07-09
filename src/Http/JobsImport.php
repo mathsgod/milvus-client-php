@@ -17,32 +17,20 @@ class JobsImport
     /**
      * Create an import job to import data files into a Milvus collection.
      */
-    public function create(
-        string $collectionName,
-        ?string $partitionName = null,
-        array $files,
-        ?array $options = null
-    ): array {
-
+    public function create(array $params): array
+    {
         return $this->client->post('/v2/vectordb/jobs/import/create', [
-            'json' => [
-                'collectionName' => $collectionName,
-                'partitionName' => $partitionName,
-                'files' => $files,
-                'options' => $options
-            ]
+            'json' => $params
         ]);
     }
 
     /**
      * This operation gets the progress of the specified bulk-import job.
      */
-    public function describe(string $jobId): array
+    public function describe(array $params): array
     {
         return $this->client->post('/v2/vectordb/jobs/import/describe', [
-            'json' => [
-                'jobId' => $jobId
-            ]
+            'json' => $params
         ]);
     }
 
