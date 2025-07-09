@@ -1,9 +1,10 @@
 <?php
 
-namespace Milvus;
+namespace Milvus\Http;
 
 use Exception;
 use JsonSerializable;
+use Milvus\Client;
 
 class Entities
 {

@@ -1,6 +1,8 @@
 <?php
 
-namespace Milvus;
+namespace Milvus\Http;
+
+use Milvus\Client;
 
 class Roles
 {

@@ -1,8 +1,9 @@
 <?php
 
-namespace Milvus;
+namespace Milvus\Http;
 
 use Exception;
+use Milvus\Client;
 
 class Collections
 {
