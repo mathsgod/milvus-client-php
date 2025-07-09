@@ -4,7 +4,7 @@ namespace Milvus;
 
 use JsonSerializable;
 
-class AnnSearchRequest implements JsonSerializable
+class HybridSearchRequest implements JsonSerializable
 {
 
     public function __construct(

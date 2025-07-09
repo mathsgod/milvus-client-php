@@ -12,14 +12,14 @@ trait Vector
      */
     public function hybridSearch(
         string $collection_name,
-        array $reqs,
+        array $search,
         $ranker,
         ?int $limit = null,
         ?array $output_fields = []
     ) {
         return (new Entities($this))->hybridSearch(
             $collection_name,
-            $reqs,
+            $search,
             $ranker,
             $limit,
             $output_fields
