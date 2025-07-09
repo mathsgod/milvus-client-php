@@ -11,12 +11,17 @@ trait Management
 
     public function createIndex(string $collection_name, IndexParams $index_params)
     {
-        (new Indexes($this))->create($collection_name, $index_params);
+        (new Indexes($this))->create([
+            'collectionName' => $collection_name,
+            'indexParams' => $index_params
+        ]);
     }
 
     public function listIndexes(string $collection_name): array
     {
-        return (new Indexes($this))->list($collection_name);
+        return (new Indexes($this))->list([
+            'collectionName' => $collection_name
+        ]);
     }
 
 
@@ -25,6 +30,8 @@ trait Management
      */
     public function releaseCollection(string $collection_name)
     {
-        return (new Collections($this))->release($collection_name);
+        return (new Collections($this))->release([
+            'collectionName' => $collection_name
+        ]);
     }
 }

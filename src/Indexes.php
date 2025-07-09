@@ -11,55 +11,38 @@ class Indexes
         $this->client = $client;
     }
 
-    public function create(
-        string $collection_name,
-        IndexParams $index_params,
-    ) {
+    public function create(array $params)
+    {
         return $this->client->post("/v2/vectordb/indexes/create", [
-            "body" => json_encode([
-                "collectionName" => $collection_name,
-                "indexParams" => $index_params,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function describe(string $collection_name, string $index_name)
+    public function describe(array $params)
     {
         return $this->client->post("/v2/vectordb/indexes/describe", [
-            "body" => json_encode([
-                "collectionName" => $collection_name,
-                "indexName" => $index_name,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function dropProperties(string $collection_name, string $index_name, array $property_keys)
+    public function dropProperties(array $params)
     {
         return $this->client->post("/v2/vectordb/indexes/drop_properties", [
-            "body" => json_encode([
-                "collectionName" => $collection_name,
-                "indexName" => $index_name,
-                "propertyKeys" => $property_keys,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function drop(string $collection_name, string $index_name)
+    public function drop(array $params)
     {
         return $this->client->post("/v2/vectordb/indexes/drop", [
-            "body" => json_encode([
-                "collectionName" => $collection_name,
-                "indexName" => $index_name,
-            ]),
+            "json" => $params
         ]);
     }
 
-    public function list(string $collection_name)
+    public function list(array $params)
     {
         return $this->client->post("/v2/vectordb/indexes/list", [
-            "body" => json_encode([
-                "collectionName" => $collection_name,
-            ]),
+            "json" => $params
         ]);
     }
 }

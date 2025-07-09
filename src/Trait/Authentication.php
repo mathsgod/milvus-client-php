@@ -73,11 +73,18 @@ trait Authentication
 
     public function revokeRole(string $user_name, string $role_name)
     {
-        return $this->users()->revokeRole($user_name, $role_name);
+        return $this->users()->revokeRole([
+            'userName' => $user_name,
+            'roleName' => $role_name
+        ]);
     }
 
     public function updatePassword(string $user_name, string $old_password, string $new_password)
     {
-        return $this->users()->updatePassword($user_name, $old_password, $new_password);
+        return $this->users()->updatePassword([
+            'userName' => $user_name,
+            'password' => $old_password,
+            'newPassword' => $new_password
+        ]);
     }
 }
