@@ -267,7 +267,7 @@ $query = "sample document";
 
 print_r($client->hybridSearch(
     collection_name: "testing",
-    reqs: [
+    search: [
         new HybridSearchRequest(
             data: [[0.1, 0.2, 0.3, 0.4, 0.5]], // embedding vector of the query
             anns_field: "vector",
@@ -520,7 +520,7 @@ $client->grantPrivilege("admin", "Collection", "Insert", "test_collection");
 ```php
 $result = $client->hybridSearch(
     collection_name: "test_collection",
-    reqs: [
+    search: [
         new HybridSearchRequest(
             data: [[0.1, 0.2, 0.3, 0.4, 0.5]],
             anns_field: "vector",
