@@ -14,58 +14,45 @@ class Databases
         $this->client = $client;
     }
 
-    public function alter(string $dbName, array $properties = [])
+    public function alter(array $params)
     {
         return $this->client->post("/v2/vectordb/databases/alter", [
-            "json" => [
-                "dbName" => $dbName,
-                "properties" => $properties,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function create(string $dbName, ?array $properties = null)
+    public function create(array $params)
     {
         return $this->client->post("/v2/vectordb/databases/create", [
-            "json" => [
-                "dbName" => $dbName,
-                "properties" => $properties,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function describe(string $dbName)
+    public function describe(array $params)
     {
         return $this->client->post("/v2/vectordb/databases/describe", [
-            "json" => [
-                "dbName" => $dbName,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function drop(string $dbName)
+    public function drop(array $params)
     {
         return $this->client->post("/v2/vectordb/databases/drop", [
-            "json" => [
-                "dbName" => $dbName,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function dropProperties(string $dbName, array $propertyKeys)
+    public function dropProperties(array $params)
     {
         return $this->client->post("/v2/vectordb/databases/drop_properties", [
-            "json" => [
-                "dbName" => $dbName,
-                "propertyKeys" => $propertyKeys,
-            ],
+            "json" => $params
         ]);
     }
 
-    public function list()
+    public function list(array $params = [])
     {
         return $this->client->post("/v2/vectordb/databases/list", [
-            "body" => "{}"
+            "json" => $params
         ]);
     }
 }
