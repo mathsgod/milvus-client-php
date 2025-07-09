@@ -11,7 +11,8 @@ class AnnSearchRequest implements JsonSerializable
         private array $data,
         private string $anns_field,
         private array $param,
-        private int $limit
+        private int $limit,
+        private ?string $filter = null,
     ) {}
 
     public function jsonSerialize(): array
@@ -22,17 +23,17 @@ class AnnSearchRequest implements JsonSerializable
             'limit' => $this->limit,
             "outputFields" => ["*"]
         ];
-        if (isset($this->param['filter'])) {
-            $json['filter'] = $this->param['filter'];
+        if (isset($this->filter)) {
+            $json['filter'] = $this->filter;
         }
         if (isset($this->param['groupingField'])) {
             $json['groupingField'] = $this->param['groupingField'];
         }
         if (isset($this->param['metric_type'])) {
-            $json['metricType'] = $this->param['metricType'];
+            $json['metricType'] = $this->param['metric_type'];
         }
 
-        if(isset($this->param['limit'])) {
+        if (isset($this->param['limit'])) {
             $json['limit'] = $this->param['limit'];
         }
 
