@@ -10,6 +10,7 @@ trait Partitions
     public function createPartition(string $collection_name, string $partition_name)
     {
         return (new MilvusPartitions($this))->create([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'partitionName' => $partition_name
         ]);
@@ -18,6 +19,7 @@ trait Partitions
     public function dropPartition(string $collection_name, string $partition_name)
     {
         return (new MilvusPartitions($this))->drop([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'partitionName' => $partition_name
         ]);
@@ -26,6 +28,7 @@ trait Partitions
     public function getPartitionStats(string $collection_name, string $partition_name)
     {
         return (new MilvusPartitions($this))->getStats([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'partitionName' => $partition_name
         ]);
@@ -34,6 +37,7 @@ trait Partitions
     public function hasPartition(string $collection_name, string $partition_name): bool
     {
         return (new MilvusPartitions($this))->has([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'partitionName' => $partition_name
         ])["has"];
@@ -42,6 +46,7 @@ trait Partitions
     public function listPartitions(string $collection_name): array
     {
         return (new MilvusPartitions($this))->list([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
     }
@@ -52,6 +57,7 @@ trait Partitions
             $partition_name = [$partition_name];
         }
         return (new MilvusPartitions($this))->load([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'partitionNames' => $partition_name
         ]);
@@ -63,6 +69,7 @@ trait Partitions
             $partition_name = [$partition_name];
         }
         return (new MilvusPartitions($this))->release([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'partitionNames' => $partition_name
         ]);

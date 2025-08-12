@@ -20,6 +20,7 @@ trait Vector
         ?string $consistency_level = null
     ) {
         return (new Entities($this))->hybridSearch([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'search' => $search,
             'rerank' => $ranker,
@@ -38,6 +39,7 @@ trait Vector
         array $data,
     ) {
         return (new Entities($this))->insert([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'data' => $data
         ]);
@@ -49,6 +51,7 @@ trait Vector
     public function get(string $collection_name, array $ids, ?array $output_fields = null)
     {
         return (new Entities($this))->get([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'id' => $ids,
             'outputFields' => $output_fields
@@ -69,6 +72,7 @@ trait Vector
         }
 
         return (new Entities($this))->delete([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'filter' => $filter
         ]);
@@ -87,6 +91,7 @@ trait Vector
     ) {
         return (new Entities($this))
             ->query([
+                'dbName' => $this->dbName,
                 'collectionName' => $collection_name,
                 'filter' => $filter,
                 'outputFields' => $output_fields,
@@ -109,6 +114,7 @@ trait Vector
 
     ) {
         return (new Entities($this))->search([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'data' => $data,
             'filter' => $filter,
@@ -127,6 +133,7 @@ trait Vector
         ?string $partition_name = null
     ) {
         return (new Entities($this))->upsert([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'data' => $data,
             'partitionName' => $partition_name

@@ -19,13 +19,15 @@ trait Collections
     public function flushCollection(string $collection_name)
     {
         return (new Collections($this))->flush([
-            'collectionName' => $collection_name
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
         ]);
     }
 
     public function releaseCollection(string $collection_name)
     {
         return (new Collections($this))->release([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
     }
@@ -33,6 +35,7 @@ trait Collections
     public function loadCollection(string $collection_name)
     {
         return $this->collections()->load([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
     }
@@ -43,6 +46,7 @@ trait Collections
     public function alterAlias(string $collection_name, string $alias_name)
     {
         $this->aliases()->alter([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'aliasName' => $alias_name
         ]);
@@ -54,14 +58,13 @@ trait Collections
     public function alterCollectionField(
         string $collection_name,
         string $field_name,
-        array $field_params,
-        ?string $db_name = null
+        array $field_params
     ) {
         return $this->collections()->alterFieldProperties([
             'collectionName' => $collection_name,
             'fieldName' => $field_name,
             'fieldParams' => $field_params,
-            'dbName' => $db_name,
+            'dbName' =>  $this->dbName,
         ]);
     }
 
@@ -71,6 +74,7 @@ trait Collections
     public function alterCollectionProperties(string $collection_name, array $properties)
     {
         return $this->collections()->alterProperties([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'properties' => $properties
         ]);
@@ -83,6 +87,7 @@ trait Collections
     {
         /** @var \Milvus\Client $this */
         $this->aliases()->create([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'aliasName' => $alias_name
         ]);
@@ -127,6 +132,7 @@ trait Collections
 
         /** @var \Milvus\Client $this */
         $this->collections()->create([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'dimension' => $dimension,
             'idType' => $id_type,
@@ -165,6 +171,7 @@ trait Collections
     public function describeAlias(string $alias_name): array
     {
         return $this->aliases()->describe([
+            'dbName' => $this->dbName,
             'aliasName' => $alias_name
         ]);
     }
@@ -175,6 +182,7 @@ trait Collections
     public function describeCollection(string $collection_name)
     {
         return $this->collections()->describe([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
     }
@@ -185,6 +193,7 @@ trait Collections
     public function dropAlias(string $alias_name)
     {
         $this->aliases()->drop([
+            'dbName' => $this->dbName,
             'aliasName' => $alias_name
         ]);
     }
@@ -195,6 +204,7 @@ trait Collections
     public function dropCollection(string $collection_name)
     {
         $this->collections()->drop([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
     }
@@ -205,6 +215,7 @@ trait Collections
     public function dropCollectionProperties(string $collection_name, array $properties)
     {
         return $this->collections()->dropProperties([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'properties' => $properties
         ]);
@@ -216,6 +227,7 @@ trait Collections
     public function getCollectionStats(string $collection_name): array
     {
         return $this->collections()->getStats([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
     }
@@ -226,6 +238,7 @@ trait Collections
     public function hasCollection(string $collection_name): bool
     {
         return $this->collections()->has([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ])["has"];
     }
@@ -236,6 +249,7 @@ trait Collections
     public function listAliases(string $collection_name)
     {
         return $this->aliases()->list([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
     }
@@ -245,7 +259,9 @@ trait Collections
      */
     public function listCollections()
     {
-        return $this->collections()->list();
+        return $this->collections()->list([
+            'dbName' => $this->dbName
+        ]);
     }
 
     /**
@@ -254,6 +270,7 @@ trait Collections
     public function renameCollection(string $collection_name, string $new_collection_name)
     {
         return $this->collections()->rename([
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'newCollectionName' => $new_collection_name
         ]);
