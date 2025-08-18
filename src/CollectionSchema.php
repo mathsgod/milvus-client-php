@@ -112,6 +112,12 @@ class CollectionSchema implements \JsonSerializable
             "params" => $params,
         ];
 
+        //filter out empty params
+        if (count($function['params']) === 0) {
+            unset($function['params']);
+        }
+
+
         $this->functions[] = $function;
 
         return $this;
