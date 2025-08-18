@@ -1,6 +1,6 @@
 # milvus-client-php
 
-A PHP client for [Milvus](https://milvus.io/) 2.5.x.
+A PHP client for [Milvus](https://milvus.io/) 2.6.x.
 
 ## Installation
 
@@ -196,6 +196,74 @@ print_r($client->search(
     data: ['sample'],
     anns_field: "text_sparse",
     limit: 5
+));
+```
+
+---
+
+## Text Embedding Example
+
+```php
+$client = new Milvus\Client();
+
+$client->dropCollection("testing");
+
+// Text Embedding with Azure OpenAI
+$client->createCollection(
+    collection_name: "testing",
+    schema: $client->createSchema()
+        ->addField("id", Milvus\DataType::INT64, is_primary: true)
+        ->addField("document", Milvus\DataType::VARCHAR, max_length: 1000, enable_analyzer: true, enable_match: true)
+        ->addField("dense", Milvus\DataType::FLOAT_VECTOR, dim: 1536)
+        ->addFunction(
+            name: "azure_embedding",
+            function_type: Milvus\FunctionType::TEXT_EMBEDDING,
+            input_field_names: ["document"],
+            output_field_names: ["dense"],
+            params: [
+                "provider" => "azure_openai",
+                "model_name" => "text-embedding-3-small"
+            ]
+        ),
+    index_params: $client->prepareIndexParams()
+        ->addIndex(
+            field_name: "dense",
+            index_name: "dense_index",
+            index_type: Milvus\IndexType::AUTOINDEX,
+            metric_type: Milvus\MetricType::COSINE
+        ),
+);
+
+// Insert data (embeddings will be automatically generated)
+$client->insert(
+    collection_name: "testing",
+    data: [
+        [
+            "id" => 1,
+            "document" => "This is a sample document for embedding.",
+        ],
+        [
+            "id" => 2,
+            "document" => "Another document to test text embedding functionality.",
+        ],
+        [
+            "id" => 3,
+            "document" => "Milvus supports automatic text embedding generation.",
+        ],
+        [
+            "id" => 4,
+            "document" => "Azure OpenAI provides powerful embedding models.",
+        ]
+    ]
+);
+
+// Search using embedding (the query text will be automatically embedded)
+print_r($client->search(
+    collection_name: "testing",
+    data: ["sample document embedding"],
+    anns_field: "dense",
+    limit: 3,
+    output_fields: ["id", "document"]
 ));
 ```
 
