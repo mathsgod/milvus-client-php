@@ -267,6 +267,35 @@ print_r($client->search(
 ));
 ```
 
+#### Example Search Result
+
+```php
+Array
+(
+    [0] => Array
+        (
+            [distance] => 0.712204
+            [document] => This is a sample document for embedding.
+            [id] => 1
+        )
+
+    [1] => Array
+        (
+            [distance] => 0.6992143
+            [document] => Another document to test text embedding functionality.
+            [id] => 2
+        )
+
+    [2] => Array
+        (
+            [distance] => 0.43827245
+            [document] => Azure OpenAI provides powerful embedding models.
+            [id] => 4
+        )
+
+)
+```
+
 ---
 
 ## Hybrid Search Example
