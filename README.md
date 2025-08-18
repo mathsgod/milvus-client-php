@@ -203,10 +203,10 @@ print_r($client->search(
 
 ## Text Embedding Example
 
+For more details about embedding functions, please refer to [Milvus Embedding Function Overview](https://milvus.io/docs/embedding-function-overview.md).
+
 ```php
 $client = new Milvus\Client();
-
-$client->dropCollection("testing");
 
 // Text Embedding with Azure OpenAI
 $client->createCollection(
