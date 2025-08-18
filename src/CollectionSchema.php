@@ -101,14 +101,15 @@ class CollectionSchema implements \JsonSerializable
         return $this;
     }
 
-    public function addFunction(string $name, string $function_type, array $input_field_names, array $output_field_names)
+    public function addFunction(string $name, string $function_type, array $input_field_names, array $output_field_names, array $params = [])
     {
 
         $function = [
             "name" => $name,
             "type" => $function_type,
             "inputFieldNames" => $input_field_names,
-            "outputFieldNames" => $output_field_names
+            "outputFieldNames" => $output_field_names,
+            "params" => $params,
         ];
 
         $this->functions[] = $function;
