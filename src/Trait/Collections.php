@@ -18,7 +18,7 @@ trait Collections
      */
     public function flushCollection(string $collection_name)
     {
-        return (new Collections($this))->flush([
+        return $this->collections()->flush([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
         ]);
@@ -26,7 +26,7 @@ trait Collections
 
     public function releaseCollection(string $collection_name)
     {
-        return (new Collections($this))->release([
+        return $this->collections()->release([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);
