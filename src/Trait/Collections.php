@@ -24,111 +24,25 @@ trait Collections
         ]);
     }
 
-    public function addCollectionFunction(string $collection_name, array $function)
+    public function compactCollection(string $collection_name)
     {
-        return $this->collections()->addFunction([
+        return $this->collections()->compact([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
-            'function' => $function,
         ]);
     }
 
-    public function alterCollectionFunction(string $collection_name, string $function_name, array $function)
+    public function getCollectionLoadState(string $collection_name)
     {
-        return $this->collections()->alterFunction([
+        return $this->collections()->getLoadState([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
-            'functionName' => $function_name,
-            'function' => $function,
         ]);
     }
 
-    public function describeExternalRefreshJob($job_id)
+    public function refreshCollectionLoad(string $collection_name)
     {
-        return $this->collections()->describeExternalRefreshJob([
-            'jobId' => $job_id,
-        ]);
-    }
-
-    public function dropCollectionFunction(string $collection_name, string $function_name)
-    {
-        return $this->collections()->dropFunction([
-            'dbName' => $this->dbName,
-            'collectionName' => $collection_name,
-            'FunctionName' => $function_name,
-        ]);
-    }
-
-    public function getCompactionState($job_id)
-    {
-        return $this->collections()->getCompactionState([
-            'jobID' => $job_id,
-        ]);
-    }
-
-    public function listExternalRefreshJobs(?string $collection_name = null)
-    {
-        $params = [
-            'dbName' => $this->dbName,
-            'collectionName' => $collection_name,
-        ];
-
-        return $this->collections()->listExternalRefreshJobs(
-            array_filter($params, fn ($value) => $value !== null)
-        );
-    }
-
-    public function refreshExternalCollection(
-        string $collection_name,
-        ?string $external_source = null,
-        ?string $external_spec = null
-    ) {
-        if (($external_source === null) !== ($external_spec === null)) {
-            throw new \InvalidArgumentException(
-                'external_source and external_spec must be provided together.'
-            );
-        }
-
-        $params = [
-            'dbName' => $this->dbName,
-            'collectionName' => $collection_name,
-            'externalSource' => $external_source,
-            'externalSpec' => $external_spec,
-        ];
-
-        return $this->collections()->refreshExternal(
-            array_filter($params, fn ($value) => $value !== null)
-        );
-    }
-
-    public function runAnalyzer(
-        array $text,
-        ?string $analyzer_params = null,
-        ?bool $with_detail = null,
-        ?bool $with_hash = null,
-        ?string $collection_name = null,
-        ?string $field_name = null,
-        ?array $analyzer_names = null
-    ) {
-        $params = [
-            'dbName' => $this->dbName,
-            'text' => $text,
-            'analyzerParams' => $analyzer_params,
-            'withDetail' => $with_detail,
-            'withHash' => $with_hash,
-            'collectionName' => $collection_name,
-            'fieldName' => $field_name,
-            'analyzerNames' => $analyzer_names,
-        ];
-
-        return $this->collections()->runAnalyzer(
-            array_filter($params, fn ($value) => $value !== null)
-        );
-    }
-
-    public function truncateCollection(string $collection_name)
-    {
-        return $this->collections()->truncate([
+        return $this->collections()->refreshLoad([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
         ]);
@@ -155,7 +69,7 @@ trait Collections
      */
     public function alterAlias(string $collection_name, string $alias_name)
     {
-        $this->aliases()->alter([
+        return $this->aliases()->alter([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'aliasName' => $alias_name
@@ -196,7 +110,7 @@ trait Collections
     public function createAlias(string $collection_name, string $alias_name)
     {
         /** @var \Milvus\Client $this */
-        $this->aliases()->create([
+        return $this->aliases()->create([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'aliasName' => $alias_name
@@ -223,25 +137,25 @@ trait Collections
         ?string $consistency_level = null,
         ?array $properties = null
     ) {
-        $params = [];
+        $collection_params = [];
         if ($num_shards !== null) {
-            $params['shardsNum'] = $num_shards;
+            $collection_params['shardsNum'] = $num_shards;
         }
 
         if ($enable_mmap !== null) {
-            $params['mmap.enabled'] = $enable_mmap;
+            $collection_params['mmap.enabled'] = $enable_mmap;
         }
 
         if ($consistency_level !== null) {
-            $params['consistencyLevel'] = $consistency_level;
+            $collection_params['consistencyLevel'] = $consistency_level;
         }
 
         if (isset($properties["collection.ttl.seconds"])) {
-            $params['ttlSeconds'] = $properties["collection.ttl.seconds"];
+            $collection_params['ttlSeconds'] = $properties["collection.ttl.seconds"];
         }
 
         /** @var \Milvus\Client $this */
-        $this->collections()->create([
+        $params = [
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'dimension' => $dimension,
@@ -253,8 +167,12 @@ trait Collections
             'schema' => $schema,
             'indexParams' => $index_params,
             'enableDynamicField' => $enable_dynamic_field,
-            'params' => empty($params) ? null : $params
-        ]);
+            'params' => empty($collection_params) ? null : $collection_params
+        ];
+
+        return $this->collections()->create(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 
     /**
@@ -302,7 +220,7 @@ trait Collections
      */
     public function dropAlias(string $alias_name)
     {
-        $this->aliases()->drop([
+        return $this->aliases()->drop([
             'dbName' => $this->dbName,
             'aliasName' => $alias_name
         ]);
@@ -313,7 +231,7 @@ trait Collections
      */
     public function dropCollection(string $collection_name)
     {
-        $this->collections()->drop([
+        return $this->collections()->drop([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);

@@ -6,7 +6,6 @@ use Milvus\Http\Aliases;
 use Milvus\Http\Databases;
 use Milvus\Http\Entities;
 use Milvus\Http\Partitions;
-use Milvus\Http\PrivilegeGroups;
 use Milvus\Http\Roles;
 use Milvus\Http\Users;
 
@@ -20,7 +19,6 @@ class Client
     use Trait\ResourceGroup;
     use Trait\DataImport;
     use Trait\Indexes;
-    use Trait\PrivilegeGroup;
 
     private $client;
     private $dbName = "default";
@@ -31,6 +29,7 @@ class Client
         ?string $db_name = "default",
         ?string $token = null,
         ?float $timeout = null,
+        bool|string $verify = true,
     ) {
         $headers = [
             "Content-Type" => "application/json",
@@ -51,7 +50,7 @@ class Client
 
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => $uri,
-            "verify" => false,
+            "verify" => $verify,
             "headers" => $headers,
             "timeout" => $timeout
         ]);
@@ -99,10 +98,16 @@ class Client
 
         $data = json_decode($response->getBody()->getContents(), true);
 
-        if ($data["code"] !== 0)
-            throw new \Exception($data["message"], $data["code"]);
+        if (!is_array($data) || !array_key_exists('code', $data)) {
+            throw new \UnexpectedValueException('Milvus returned an invalid JSON response.');
+        }
 
-        return $data["data"];
+        $code = (int) $data['code'];
+        if ($code !== 0) {
+            throw new \Exception($data['message'] ?? 'Milvus request failed.', $code);
+        }
+
+        return $data['data'] ?? [];
     }
 
     public function prepareIndexParams()
@@ -113,11 +118,6 @@ class Client
     public function roles()
     {
         return new Roles($this);
-    }
-
-    public function privilegeGroups()
-    {
-        return new PrivilegeGroups($this);
     }
 
     public function users()

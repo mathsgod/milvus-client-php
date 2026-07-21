@@ -6,25 +6,14 @@ trait Authentication
 {
     public function createRole(string $role_name)
     {
-        $this->roles()->create([
+        return $this->roles()->create([
             'roleName' => $role_name
         ]);
     }
 
-    public function alterRole(string $role_name, ?string $description = null, ?string $db_name = null)
-    {
-        $params = [
-            'roleName' => $role_name,
-            'description' => $description,
-            'dbName' => $db_name,
-        ];
-
-        return $this->roles()->alter(array_filter($params, fn ($value) => $value !== null));
-    }
-
     public function createUser(string $user_name, string $password)
     {
-        $this->users()->create([
+        return $this->users()->create([
             'userName' => $user_name,
             'password' => $password
         ]);
@@ -46,14 +35,14 @@ trait Authentication
 
     public function dropRole(string $role_name)
     {
-        $this->roles()->drop([
+        return $this->roles()->drop([
             'roleName' => $role_name
         ]);
     }
 
     public function dropUser(string $user_name)
     {
-        $this->users()->drop([
+        return $this->users()->drop([
             'userName' => $user_name
         ]);
     }
@@ -64,44 +53,12 @@ trait Authentication
         string $privilege,
         string $object_name
     ) {
-        $this->roles()->grantPrivilege([
+        return $this->roles()->grantPrivilege([
             'roleName' => $role_name,
             'objectType' => $object_type,
             'objectName' => $object_name,
             'privilege' => $privilege
         ]);
-    }
-
-    public function grantPrivilegeV2(
-        string $role_name,
-        string $privilege,
-        ?string $db_name = null,
-        ?string $collection_name = null
-    ) {
-        $params = [
-            'roleName' => $role_name,
-            'privilege' => $privilege,
-            'dbName' => $db_name,
-            'collectionName' => $collection_name,
-        ];
-
-        return $this->roles()->grantPrivilegeV2(array_filter($params, fn ($value) => $value !== null));
-    }
-
-    public function revokePrivilegeV2(
-        string $role_name,
-        string $privilege,
-        ?string $db_name = null,
-        ?string $collection_name = null
-    ) {
-        $params = [
-            'roleName' => $role_name,
-            'privilege' => $privilege,
-            'dbName' => $db_name,
-            'collectionName' => $collection_name,
-        ];
-
-        return $this->roles()->revokePrivilegeV2(array_filter($params, fn ($value) => $value !== null));
     }
 
     public function listRoles(): array

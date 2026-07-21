@@ -19,6 +19,14 @@ trait Database
         ]);
     }
 
+    public function alterDatabase(string $database_name, array $properties)
+    {
+        return $this->databases()->alter([
+            'dbName' => $database_name,
+            'properties' => $properties,
+        ]);
+    }
+
     public function describeDatabase(string $db_name): array
     {
         return $this->databases()->describe([

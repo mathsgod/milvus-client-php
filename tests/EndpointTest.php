@@ -3,24 +3,30 @@
 use Milvus\Client;
 use Milvus\Http\Collections;
 use Milvus\Http\Indexes;
-use Milvus\Http\PrivilegeGroups;
-use Milvus\Http\Roles;
 use PHPUnit\Framework\TestCase;
 
 class EndpointTest extends TestCase
 {
-    public function testMissingCollectionEndpointsUseOfficialPaths(): void
+    public function testCollectionEndpointsUseV26OfficialPaths(): void
     {
         $cases = [
-            ['addFunction', '/v2/vectordb/collections/add_function'],
-            ['alterFunction', '/v2/vectordb/collections/alter_function'],
-            ['describeExternalRefreshJob', '/v2/vectordb/jobs/external_collection/describe'],
-            ['dropFunction', '/v2/vectordb/collections/drop_function'],
-            ['getCompactionState', '/v2/vectordb/collections/get_compaction_state'],
-            ['listExternalRefreshJobs', '/v2/vectordb/jobs/external_collection/list'],
-            ['refreshExternal', '/v2/vectordb/jobs/external_collection/refresh'],
-            ['runAnalyzer', '/v2/vectordb/common/run_analyzer'],
-            ['truncate', '/v2/vectordb/collections/truncate'],
+            ['addField', '/v2/vectordb/collections/fields/add'],
+            ['alterFieldProperties', '/v2/vectordb/collections/fields/alter_properties'],
+            ['alterProperties', '/v2/vectordb/collections/alter_properties'],
+            ['compact', '/v2/vectordb/collections/compact'],
+            ['create', '/v2/vectordb/collections/create'],
+            ['describe', '/v2/vectordb/collections/describe'],
+            ['dropProperties', '/v2/vectordb/collections/drop_properties'],
+            ['drop', '/v2/vectordb/collections/drop'],
+            ['flush', '/v2/vectordb/collections/flush'],
+            ['getLoadState', '/v2/vectordb/collections/get_load_state'],
+            ['getStats', '/v2/vectordb/collections/get_stats'],
+            ['has', '/v2/vectordb/collections/has'],
+            ['list', '/v2/vectordb/collections/list'],
+            ['load', '/v2/vectordb/collections/load'],
+            ['refreshLoad', '/v2/vectordb/collections/refresh_load'],
+            ['release', '/v2/vectordb/collections/release'],
+            ['rename', '/v2/vectordb/collections/rename'],
         ];
 
         $calls = $this->mockPostCalls(count($cases));
@@ -50,52 +56,6 @@ class EndpointTest extends TestCase
         $this->assertSame([], $http->alterProperties($params));
         $this->assertSame('/v2/vectordb/indexes/alter_properties', $calls['calls'][0]['uri']);
         $this->assertSame(['json' => $params], $calls['calls'][0]['options']);
-    }
-
-    public function testPrivilegeGroupEndpointsUseOfficialPaths(): void
-    {
-        $cases = [
-            ['create', '/v2/vectordb/privilege_groups/create'],
-            ['drop', '/v2/vectordb/privilege_groups/drop'],
-            ['list', '/v2/vectordb/privilege_groups/list'],
-            ['addPrivileges', '/v2/vectordb/privilege_groups/add_privileges_to_group'],
-            ['removePrivileges', '/v2/vectordb/privilege_groups/remove_privileges_from_group'],
-        ];
-
-        $calls = $this->mockPostCalls(count($cases));
-        $http = new PrivilegeGroups($calls['client']);
-
-        foreach ($cases as [$method, $path]) {
-            $params = ['privilegeGroupName' => 'test_group'];
-            $this->assertSame([], $http->{$method}($params));
-        }
-
-        $this->assertSame(
-            array_map(fn ($case) => $case[1], $cases),
-            array_column($calls['calls'], 'uri')
-        );
-    }
-
-    public function testMissingRoleEndpointsUseOfficialPaths(): void
-    {
-        $cases = [
-            ['alter', '/v2/vectordb/roles/alter'],
-            ['grantPrivilegeV2', '/v2/vectordb/roles/grant_privilege_v2'],
-            ['revokePrivilegeV2', '/v2/vectordb/roles/revoke_privilege_v2'],
-        ];
-
-        $calls = $this->mockPostCalls(count($cases));
-        $http = new Roles($calls['client']);
-
-        foreach ($cases as [$method, $path]) {
-            $params = ['roleName' => 'test_role'];
-            $this->assertSame([], $http->{$method}($params));
-        }
-
-        $this->assertSame(
-            array_map(fn ($case) => $case[1], $cases),
-            array_column($calls['calls'], 'uri')
-        );
     }
 
     private function mockPostCalls(int $expected_calls): array

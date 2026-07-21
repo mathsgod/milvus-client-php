@@ -16,10 +16,15 @@ trait Vector
         $ranker,
         ?int $limit = null,
         ?array $output_fields = null,
-        ?string $partition_name = null,
-        ?string $consistency_level = null
+        string|array|null $partition_name = null,
+        ?string $consistency_level = null,
+        ?int $offset = null
     ) {
-        return (new Entities($this))->hybridSearch([
+        if (is_string($partition_name)) {
+            $partition_name = [$partition_name];
+        }
+
+        $params = [
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'search' => $search,
@@ -27,8 +32,13 @@ trait Vector
             'limit' => $limit,
             'outputFields' => $output_fields,
             'partitionNames' => $partition_name,
-            'consistencyLevel' => $consistency_level
-        ]);
+            'consistencyLevel' => $consistency_level,
+            'offset' => $offset,
+        ];
+
+        return (new Entities($this))->hybridSearch(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 
     /**
@@ -37,25 +47,37 @@ trait Vector
     public function insert(
         string $collection_name,
         array $data,
+        ?string $partition_name = null,
     ) {
         return (new Entities($this))->insert([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
-            'data' => $data
+            'data' => $data,
+            'partitionName' => $partition_name,
         ]);
     }
 
     /**
      * This operation gets specific entities by their IDs.
      */
-    public function get(string $collection_name, array $ids, ?array $output_fields = null)
+    public function get(
+        string $collection_name,
+        array $ids,
+        ?array $output_fields = null,
+        ?array $partition_names = null
+    )
     {
-        return (new Entities($this))->get([
+        $params = [
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'id' => $ids,
-            'outputFields' => $output_fields
-        ]);
+            'outputFields' => $output_fields,
+            'partitionNames' => $partition_names,
+        ];
+
+        return (new Entities($this))->get(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 
     /**
@@ -64,18 +86,37 @@ trait Vector
     public function delete(
         string $collection_name,
         ?string $filter = null,
-        ?array $ids = null
+        ?array $ids = null,
+        ?string $partition_name = null
     ) {
 
         if ($ids !== null) {
-            $filter = "id in [" . implode(',', $ids) . "]";
+            $filter = 'id in [' . implode(',', array_map(
+                static function ($id): string {
+                    if (is_int($id) || is_float($id)) {
+                        return (string) $id;
+                    }
+
+                    if (is_string($id)) {
+                        return json_encode($id, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+                    }
+
+                    throw new \InvalidArgumentException('Entity IDs must be integers, floats, or strings.');
+                },
+                $ids
+            )) . ']';
         }
 
-        return (new Entities($this))->delete([
+        $params = [
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
-            'filter' => $filter
-        ]);
+            'filter' => $filter,
+            'partitionName' => $partition_name,
+        ];
+
+        return (new Entities($this))->delete(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 
     /**
@@ -93,12 +134,12 @@ trait Vector
             ->query([
                 'dbName' => $this->dbName,
                 'collectionName' => $collection_name,
-                'filter' => $filter,
-                'outputFields' => $output_fields,
-                'partitionNames' => $partition_names,
-                'limit' => $limit,
-                'offset' => $offset
-            ]);
+            'filter' => $filter,
+            'outputFields' => $output_fields,
+            'partitionNames' => $partition_names,
+            'limit' => $limit,
+            'offset' => $offset,
+        ]);
     }
 
     public function search(
@@ -111,9 +152,11 @@ trait Vector
         ?string $anns_field = "vector",
         ?array $partition_names = null,
         ?string $consistency_level = null,
+        ?int $offset = null,
+        ?string $grouping_field = null,
 
     ) {
-        return (new Entities($this))->search([
+        $params = [
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'data' => $data,
@@ -123,8 +166,14 @@ trait Vector
             'limit' => $limit,
             'searchParams' => $search_params,
             'partitionNames' => $partition_names,
-            'consistencyLevel' => $consistency_level
-        ]);
+            'consistencyLevel' => $consistency_level,
+            'offset' => $offset,
+            'groupingField' => $grouping_field,
+        ];
+
+        return (new Entities($this))->search(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 
     public function upsert(
@@ -132,11 +181,15 @@ trait Vector
         array $data,
         ?string $partition_name = null
     ) {
-        return (new Entities($this))->upsert([
+        $params = [
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'data' => $data,
             'partitionName' => $partition_name
-        ]);
+        ];
+
+        return (new Entities($this))->upsert(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 }

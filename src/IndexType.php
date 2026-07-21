@@ -15,6 +15,7 @@ class IndexType
     const IVF_PQ = 'IVF_PQ';
     const IVF_SQ8 = 'IVF_SQ8';
     const IVF_RABITQ  = 'IVF_RABITQ'; //only for Milvus 2.6.0 and later
+    const SCANN = 'SCANN';
 
     const HNSW = 'HNSW';
     const HNSW_SQ = 'HNSW_SQ';
@@ -26,8 +27,12 @@ class IndexType
     const BIN_FLAT = 'BIN_FLAT';
 
     const SPARSE_INVERTED_INDEX = 'SPARSE_INVERTED_INDEX';
+    const SPARSE_WAND = 'SPARSE_WAND';
+    const TRIE = 'TRIE';
 
-    const GPU_CAGRAPH = 'GPU_CAGRAPH';
+    const GPU_CAGRA = 'GPU_CAGRA';
+    // Kept as an alias for backwards compatibility; the API value is GPU_CAGRA.
+    const GPU_CAGRAPH = 'GPU_CAGRA';
     const GPU_IVF_FLAT = 'GPU_IVF_FLAT';
     const GPU_IVF_PQ = 'GPU_IVF_PQ';
     const GPU_BRUTE_FORCE = 'GPU_BRUTE_FORCE';

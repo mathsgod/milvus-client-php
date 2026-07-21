@@ -7,9 +7,11 @@ use Milvus\Http\JobsImport;
 trait DataImport
 {
 
-    public function listImportJobs()
+    public function listImportJobs(?string $db_name = null)
     {
-        return (new JobsImport($this))->list();
+        return (new JobsImport($this))->list([
+            'dbName' => $db_name ?? $this->dbName,
+        ]);
     }
 
 
@@ -20,12 +22,17 @@ trait DataImport
         ?array $options = null,
 
     ) {
-        return (new JobsImport($this))->create([
+        $params = [
+            'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'partitionName' => $partition_name,
             'files' => $files,
             'options' => $options
-        ]);
+        ];
+
+        return (new JobsImport($this))->create(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 
     public function describeImportJob(string $job_id)

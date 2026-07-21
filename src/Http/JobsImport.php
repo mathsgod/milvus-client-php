@@ -34,10 +34,10 @@ class JobsImport
         ]);
     }
 
-    public function list(): array
+    public function list(array $params = []): array
     {
         return $this->client->post('/v2/vectordb/jobs/import/list', [
-            "body" => "{}"
+            'json' => $params,
         ]);
     }
 }
