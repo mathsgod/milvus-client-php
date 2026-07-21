@@ -15,6 +15,16 @@ trait Indexes
         ]);
     }
 
+    public function alterIndexProperties(string $collection_name, string $index_name, array $properties)
+    {
+        return (new MilvusIndexes($this))->alterProperties([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+            'indexName' => $index_name,
+            'properties' => $properties
+        ]);
+    }
+
     public function describeIndex(string $collection_name, string $index_name)
     {
         return (new MilvusIndexes($this))->describe([

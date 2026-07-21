@@ -20,6 +20,13 @@ class Roles
         ]);
     }
 
+    public function alter(array $params)
+    {
+        return $this->client->post("/v2/vectordb/roles/alter", [
+            "json" => $params,
+        ]);
+    }
+
     public function describe(array $params)
     {
         return $this->client->post("/v2/vectordb/roles/describe", [
@@ -48,9 +55,23 @@ class Roles
         ]);
     }
 
+    public function grantPrivilegeV2(array $params)
+    {
+        return $this->client->post("/v2/vectordb/roles/grant_privilege_v2", [
+            "json" => $params,
+        ]);
+    }
+
     public function revokePrivilege(array $params)
     {
         return $this->client->post("/v2/vectordb/roles/revoke_privilege", [
+            "json" => $params,
+        ]);
+    }
+
+    public function revokePrivilegeV2(array $params)
+    {
+        return $this->client->post("/v2/vectordb/roles/revoke_privilege_v2", [
             "json" => $params,
         ]);
     }

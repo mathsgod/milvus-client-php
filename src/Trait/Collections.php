@@ -24,6 +24,116 @@ trait Collections
         ]);
     }
 
+    public function addCollectionFunction(string $collection_name, array $function)
+    {
+        return $this->collections()->addFunction([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+            'function' => $function,
+        ]);
+    }
+
+    public function alterCollectionFunction(string $collection_name, string $function_name, array $function)
+    {
+        return $this->collections()->alterFunction([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+            'functionName' => $function_name,
+            'function' => $function,
+        ]);
+    }
+
+    public function describeExternalRefreshJob($job_id)
+    {
+        return $this->collections()->describeExternalRefreshJob([
+            'jobId' => $job_id,
+        ]);
+    }
+
+    public function dropCollectionFunction(string $collection_name, string $function_name)
+    {
+        return $this->collections()->dropFunction([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+            'FunctionName' => $function_name,
+        ]);
+    }
+
+    public function getCompactionState($job_id)
+    {
+        return $this->collections()->getCompactionState([
+            'jobID' => $job_id,
+        ]);
+    }
+
+    public function listExternalRefreshJobs(?string $collection_name = null)
+    {
+        $params = [
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+        ];
+
+        return $this->collections()->listExternalRefreshJobs(
+            array_filter($params, fn ($value) => $value !== null)
+        );
+    }
+
+    public function refreshExternalCollection(
+        string $collection_name,
+        ?string $external_source = null,
+        ?string $external_spec = null
+    ) {
+        if (($external_source === null) !== ($external_spec === null)) {
+            throw new \InvalidArgumentException(
+                'external_source and external_spec must be provided together.'
+            );
+        }
+
+        $params = [
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+            'externalSource' => $external_source,
+            'externalSpec' => $external_spec,
+        ];
+
+        return $this->collections()->refreshExternal(
+            array_filter($params, fn ($value) => $value !== null)
+        );
+    }
+
+    public function runAnalyzer(
+        array $text,
+        ?string $analyzer_params = null,
+        ?bool $with_detail = null,
+        ?bool $with_hash = null,
+        ?string $collection_name = null,
+        ?string $field_name = null,
+        ?array $analyzer_names = null
+    ) {
+        $params = [
+            'dbName' => $this->dbName,
+            'text' => $text,
+            'analyzerParams' => $analyzer_params,
+            'withDetail' => $with_detail,
+            'withHash' => $with_hash,
+            'collectionName' => $collection_name,
+            'fieldName' => $field_name,
+            'analyzerNames' => $analyzer_names,
+        ];
+
+        return $this->collections()->runAnalyzer(
+            array_filter($params, fn ($value) => $value !== null)
+        );
+    }
+
+    public function truncateCollection(string $collection_name)
+    {
+        return $this->collections()->truncate([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+        ]);
+    }
+
     public function releaseCollection(string $collection_name)
     {
         return $this->collections()->release([

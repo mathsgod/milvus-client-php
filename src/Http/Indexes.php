@@ -20,6 +20,13 @@ class Indexes
         ]);
     }
 
+    public function alterProperties(array $params)
+    {
+        return $this->client->post("/v2/vectordb/indexes/alter_properties", [
+            "json" => $params
+        ]);
+    }
+
     public function describe(array $params)
     {
         return $this->client->post("/v2/vectordb/indexes/describe", [

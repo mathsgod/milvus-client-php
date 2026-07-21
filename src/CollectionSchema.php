@@ -19,7 +19,7 @@ class CollectionSchema implements \JsonSerializable
     {
         $data = [
             'autoID' => $this->auto_id,
-            "enabledDynamicField" => $this->enable_dynamic_field,
+            "enableDynamicField" => $this->enable_dynamic_field,
             'fields' => $this->fields,
         ];
 

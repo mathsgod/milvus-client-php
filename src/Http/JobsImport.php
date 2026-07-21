@@ -36,7 +36,7 @@ class JobsImport
 
     public function list(): array
     {
-        return $this->client->post('/v2/vectordb/jobs/import/', [
+        return $this->client->post('/v2/vectordb/jobs/import/list', [
             "body" => "{}"
         ]);
     }

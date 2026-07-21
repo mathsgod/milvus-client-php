@@ -6,6 +6,7 @@ use Milvus\Http\Aliases;
 use Milvus\Http\Databases;
 use Milvus\Http\Entities;
 use Milvus\Http\Partitions;
+use Milvus\Http\PrivilegeGroups;
 use Milvus\Http\Roles;
 use Milvus\Http\Users;
 
@@ -19,6 +20,7 @@ class Client
     use Trait\ResourceGroup;
     use Trait\DataImport;
     use Trait\Indexes;
+    use Trait\PrivilegeGroup;
 
     private $client;
     private $dbName = "default";
@@ -111,6 +113,11 @@ class Client
     public function roles()
     {
         return new Roles($this);
+    }
+
+    public function privilegeGroups()
+    {
+        return new PrivilegeGroups($this);
     }
 
     public function users()

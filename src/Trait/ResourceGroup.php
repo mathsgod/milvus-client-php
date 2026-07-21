@@ -12,22 +12,22 @@ trait ResourceGroup
     public function createResourceGroup(string $group_name, ?array $properties = null)
     {
         return $this->resourceGroups()->create([
-            'groupName' => $group_name,
-            'properties' => $properties,
+            'name' => $group_name,
+            'config' => $properties,
         ]);
     }
 
     public function describeResourceGroup(string $group_name): array
     {
         return $this->resourceGroups()->describe([
-            'groupName' => $group_name
+            'name' => $group_name
         ]);
     }
 
     public function dropResourceGroup(string $group_name)
     {
         return $this->resourceGroups()->drop([
-            'groupName' => $group_name
+            'name' => $group_name
         ]);
     }
 
