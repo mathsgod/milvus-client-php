@@ -37,6 +37,7 @@ class DataTest extends TestCase
             schema: $schema,
             index_params: $indexParams
         );
+        self::$client->loadCollection(self::$collectionName);
     }
 
     public function getClient(): Client
