@@ -16,7 +16,12 @@ class HybridSearchRequest implements JsonSerializable
         private ?string $metric_type = null,
         private ?string $filter = null,
         private ?string $grouping_field = null,
-        private ?array $param = null
+        private ?array $param = null,
+        private ?array $output_fields = null,
+        private ?array $expr_params = null,
+        private ?int $group_size = null,
+        private ?bool $strict_group_size = null,
+        private ?array $function_score = null
     ) {}
 
     public function jsonSerialize(): array
@@ -28,10 +33,14 @@ class HybridSearchRequest implements JsonSerializable
             'groupingField' => $this->grouping_field,
             'limit' => $this->limit,
             'offset' => $this->offset,
-            "outputFields" => ["*"],
+            "outputFields" => $this->output_fields ?? ["*"],
             'metricType' => $this->metric_type,
             'ignoreGrowing' => $this->ignore_growing,
             'params' => $this->param,
+            'exprParams' => $this->expr_params,
+            'groupSize' => $this->group_size,
+            'strictGroupSize' => $this->strict_group_size,
+            'functionScore' => $this->function_score,
         ];
 
         //filter out null values

@@ -6,7 +6,7 @@ trait Authentication
 {
     public function createRole(string $role_name)
     {
-        $this->roles()->create([
+        return $this->roles()->create([
             'roleName' => $role_name
         ]);
     }
@@ -24,7 +24,7 @@ trait Authentication
 
     public function createUser(string $user_name, string $password)
     {
-        $this->users()->create([
+        return $this->users()->create([
             'userName' => $user_name,
             'password' => $password
         ]);
@@ -46,14 +46,14 @@ trait Authentication
 
     public function dropRole(string $role_name)
     {
-        $this->roles()->drop([
+        return $this->roles()->drop([
             'roleName' => $role_name
         ]);
     }
 
     public function dropUser(string $user_name)
     {
-        $this->users()->drop([
+        return $this->users()->drop([
             'userName' => $user_name
         ]);
     }
@@ -64,7 +64,7 @@ trait Authentication
         string $privilege,
         string $object_name
     ) {
-        $this->roles()->grantPrivilege([
+        return $this->roles()->grantPrivilege([
             'roleName' => $role_name,
             'objectType' => $object_type,
             'objectName' => $object_name,

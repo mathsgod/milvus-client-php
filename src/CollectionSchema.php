@@ -17,10 +17,22 @@ class CollectionSchema implements \JsonSerializable
 
     public function jsonSerialize(): mixed
     {
+        $fields = array_map(function (array $field): array {
+            if ($this->primary_field !== null && $field['fieldName'] === $this->primary_field) {
+                $field['isPrimary'] = true;
+            }
+
+            if ($this->partition_key_field !== null && $field['fieldName'] === $this->partition_key_field) {
+                $field['isPartitionKey'] = true;
+            }
+
+            return $field;
+        }, $this->fields);
+
         $data = [
             'autoID' => $this->auto_id,
             "enableDynamicField" => $this->enable_dynamic_field,
-            'fields' => $this->fields,
+            'fields' => $fields,
         ];
 
         if ($this->functions) {
@@ -48,22 +60,27 @@ class CollectionSchema implements \JsonSerializable
         ?array $analyzer_params = null
     ) {
 
-        if ($datatype == DataType::INT8_VECTOR || $datatype == DataType::FLOAT_VECTOR) {
+        if (in_array($datatype, [
+            DataType::INT8_VECTOR,
+            DataType::FLOAT_VECTOR,
+            DataType::BINARY_VECTOR,
+            DataType::FLOAT16_VECTOR,
+            DataType::BFLOAT16_VECTOR,
+        ], true)) {
             if ($dim === null) {
                 throw new \InvalidArgumentException('Dimension must be specified for vector fields.');
             }
         }
 
-        $field = [
+        $field = array_filter([
             "fieldName" => $field_name,
             "dataType" => $datatype,
-            "autoId" => false,
             "elementDataType" => $element_type,
             "nullable" => $nullable,
             "isPrimary" => $is_primary,
             "isPartitionKey" => $is_partition_key,
             "isClusteringKey" => $is_clustering_key,
-        ];
+        ], fn ($value) => $value !== null);
 
         $elementTypeParams = [];
 
@@ -101,7 +118,14 @@ class CollectionSchema implements \JsonSerializable
         return $this;
     }
 
-    public function addFunction(string $name, string $function_type, array $input_field_names, array $output_field_names, array $params = [])
+    public function addFunction(
+        string $name,
+        string $function_type,
+        array $input_field_names,
+        array $output_field_names,
+        array $params = [],
+        ?string $description = null
+    )
     {
 
         $function = [
@@ -111,6 +135,10 @@ class CollectionSchema implements \JsonSerializable
             "outputFieldNames" => $output_field_names,
             "params" => $params,
         ];
+
+        if ($description !== null) {
+            $function['description'] = $description;
+        }
 
         //filter out empty params
         if (count($function['params']) === 0) {

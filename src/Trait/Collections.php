@@ -24,6 +24,30 @@ trait Collections
         ]);
     }
 
+    public function compactCollection(string $collection_name)
+    {
+        return $this->collections()->compact([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+        ]);
+    }
+
+    public function getCollectionLoadState(string $collection_name)
+    {
+        return $this->collections()->getLoadState([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+        ]);
+    }
+
+    public function refreshCollectionLoad(string $collection_name)
+    {
+        return $this->collections()->refreshLoad([
+            'dbName' => $this->dbName,
+            'collectionName' => $collection_name,
+        ]);
+    }
+
     public function addCollectionFunction(string $collection_name, array $function)
     {
         return $this->collections()->addFunction([
@@ -155,7 +179,7 @@ trait Collections
      */
     public function alterAlias(string $collection_name, string $alias_name)
     {
-        $this->aliases()->alter([
+        return $this->aliases()->alter([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'aliasName' => $alias_name
@@ -196,7 +220,7 @@ trait Collections
     public function createAlias(string $collection_name, string $alias_name)
     {
         /** @var \Milvus\Client $this */
-        $this->aliases()->create([
+        return $this->aliases()->create([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'aliasName' => $alias_name
@@ -221,27 +245,61 @@ trait Collections
         ?float $timeout = null,
         ?bool $enable_mmap = null,
         ?string $consistency_level = null,
-        ?array $properties = null
+        ?array $properties = null,
+        ?string $description = null,
+        ?int $partitions_num = null,
+        ?bool $partition_key_isolation = null,
+        ?string $ttl_field = null,
+        ?array $warmup = null,
+        ?int $max_length = null
     ) {
-        $params = [];
+        $collection_params = $properties ?? [];
         if ($num_shards !== null) {
-            $params['shardsNum'] = $num_shards;
+            $collection_params['shardsNum'] = $num_shards;
         }
 
         if ($enable_mmap !== null) {
-            $params['mmap.enabled'] = $enable_mmap;
+            $collection_params['mmap.enabled'] = $enable_mmap;
         }
 
         if ($consistency_level !== null) {
-            $params['consistencyLevel'] = $consistency_level;
+            $collection_params['consistencyLevel'] = $consistency_level;
+        }
+
+        if ($partitions_num !== null) {
+            $collection_params['partitionsNum'] = $partitions_num;
+        }
+
+        if ($partition_key_isolation !== null) {
+            $collection_params['partitionKeyIsolation'] = $partition_key_isolation;
+        }
+
+        if ($ttl_field !== null) {
+            $collection_params['ttlField'] = $ttl_field;
+        }
+
+        if ($max_length !== null) {
+            $collection_params['max_length'] = $max_length;
+        }
+
+        if ($schema !== null && $description !== null) {
+            $collection_params['description'] = $description;
+        }
+
+        if ($warmup !== null) {
+            foreach ($warmup as $field => $value) {
+                $key = str_starts_with($field, 'warmup.') ? $field : 'warmup.' . $field;
+                $collection_params[$key] = $value;
+            }
         }
 
         if (isset($properties["collection.ttl.seconds"])) {
-            $params['ttlSeconds'] = $properties["collection.ttl.seconds"];
+            $collection_params['ttlSeconds'] = $properties["collection.ttl.seconds"];
+            unset($collection_params['collection.ttl.seconds']);
         }
 
         /** @var \Milvus\Client $this */
-        $this->collections()->create([
+        $params = [
             'dbName' => $this->dbName,
             'collectionName' => $collection_name,
             'dimension' => $dimension,
@@ -253,8 +311,13 @@ trait Collections
             'schema' => $schema,
             'indexParams' => $index_params,
             'enableDynamicField' => $enable_dynamic_field,
-            'params' => empty($params) ? null : $params
-        ]);
+            'description' => $schema === null ? $description : null,
+            'params' => empty($collection_params) ? null : $collection_params
+        ];
+
+        return $this->collections()->create(
+            array_filter($params, fn ($value) => $value !== null)
+        );
     }
 
     /**
@@ -302,7 +365,7 @@ trait Collections
      */
     public function dropAlias(string $alias_name)
     {
-        $this->aliases()->drop([
+        return $this->aliases()->drop([
             'dbName' => $this->dbName,
             'aliasName' => $alias_name
         ]);
@@ -313,7 +376,7 @@ trait Collections
      */
     public function dropCollection(string $collection_name)
     {
-        $this->collections()->drop([
+        return $this->collections()->drop([
             'dbName' => $this->dbName,
             'collectionName' => $collection_name
         ]);

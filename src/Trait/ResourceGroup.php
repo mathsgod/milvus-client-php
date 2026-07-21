@@ -46,8 +46,11 @@ trait ResourceGroup
         ]);
     }
 
-    public function alterResourceGroup() {
-
-        //todo: implement alter resource group
+    public function alterResourceGroup(string $group_name, array $properties)
+    {
+        return $this->resourceGroups()->alter([
+            'name' => $group_name,
+            'config' => $properties,
+        ]);
     }
 }

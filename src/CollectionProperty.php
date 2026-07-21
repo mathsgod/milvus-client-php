@@ -7,7 +7,7 @@ namespace Milvus;
  */
 class CollectionProperty
 {
-    const MMAP_ENABLED = 'mmmap.enabled';
+    const MMAP_ENABLED = 'mmap.enabled';
     const COLLECTION_TTL_SECONDS = 'collection.ttl.seconds';
     const PARTITIONKEY_ISOLATION = 'partitionkey.isolation';
     // Add more as needed...

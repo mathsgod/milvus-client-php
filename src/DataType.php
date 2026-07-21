@@ -13,8 +13,10 @@ class DataType
     const BOOL = 'Bool';
 
     const VARCHAR = 'VarChar';
+    const TEXT = 'Text';
 
     const FLOAT_VECTOR = 'FloatVector';
+    const FLOAT16_VECTOR = 'Float16Vector';
     const BFLOAT16_VECTOR = 'BFloat16Vector';
     const INT8_VECTOR = 'Int8Vector';
     const BINARY_VECTOR = 'BinaryVector';
@@ -23,4 +25,7 @@ class DataType
 
     const JSON = 'JSON';
     const ARRAY = 'Array';
+    const GEOMETRY = 'Geometry';
+    const TIMESTAMPTZ = 'Timestamptz';
+    const STRUCT = 'Struct';
 }

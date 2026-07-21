@@ -1,6 +1,6 @@
 # milvus-client-php
 
-A PHP client for [Milvus](https://milvus.io/) 2.6.x.
+A PHP client for [Milvus](https://milvus.io/) 3.0.x.
 
 ## Installation
 
@@ -636,4 +636,3 @@ $result = $client->hybridSearch(
 
 - [Milvus Documentation](https://milvus.io/docs)
 - [mathsgod/milvus-client-php on GitHub](https://github.com/mathsgod/milvus-client-php)
-
